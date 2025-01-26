@@ -1,0 +1,10 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  username: root       # XAMPP default username
+  password:           # Default password is empty unless you set one in XAMPP
+  host: 127.0.0.1
+
+development:
+  <<: *default
+  database: jobfinder  # Database name for development environment
