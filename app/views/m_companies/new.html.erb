@@ -22,7 +22,7 @@
   <div class="row g-0 d-flex justify-content-center align-items-stretch">
     <div class="col-7 border border-dark">
       <div class="px-5 py-4">
-        <%= form_with model: @m_company, url: signupforcompanies_path, local: true do |form| %>
+        <%= form_with model: @m_company, url: m_companies_new_path, local: true do |form| %>
           
           <div class="mb-3">
             <%= form.label :name, "会社名（または）ビジネス名", class: "form-label" %>
@@ -81,7 +81,7 @@
 
   <div class="row d-flex justify-content-center mt-3">
     <div class="col-7">
-      <h5 class="h6">仕事を探していますか？<a href="<%= signupforusers_path %>" class="text-decoration-none">ユーザー登録</a></h5>
+      <h5 class="h6">仕事を探していますか？<a href="<%= m_users_new_path %>" class="text-decoration-none">ユーザー登録</a></h5>
     </div>
     <div class="col-3"></div>
   </div>

@@ -1,0 +1,95 @@
+<style>
+.content{
+  padding-bottom:100px;
+}
+</style>
+<div class="container-fluid px-5 content">
+  <div class="row">
+    <diV class="col-6">
+      <div class="test">
+          <h3>プロファイル編集</h3>
+          <%= form_with model: @m_user, url: m_user_path(@m_user), method: :patch, local: true do |form| %>
+            <!-- Name -->
+            <div class="mb-2">
+              <%= form.label :name, "ユーザー名", class: "form-label mb-0" %>
+              <%= form.text_field :name, class: "form-control", required: true %>
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-2">
+              <%= form.label :phone, "電話番号", class: "form-label mb-0" %>
+              <%= form.telephone_field :phone, class: "form-control", required: true %>
+            </div>
+
+            <!-- Job Type -->
+            <div class="mb-2">
+              <%= form.label :job_type, "職種", class: "form-label mb-0" %>
+              <%= form.select :job_type, [
+                  ['エンジニア', 'Engineer'],
+                  ['デザイナー', 'Designer'],
+                  ['営業', 'Sales'],
+                  ['マーケティング', 'Marketing']
+                ], { prompt: "職種を選択してください" }, class: "form-select" %>
+            </div>
+
+            <!-- Skills -->
+          <div class="mb-2">
+          <label for="skills" class="form-label mb-0">スキル</label>
+          <select id="skills" class="form-select" multiple required>
+            <option value="" disabled selected>選択してください</option>
+            <option value="Ruby">Ruby</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="Python">Python</option>
+            <option value="Java">Java</option>
+            <option value="PHP">PHP</option>
+            <option value="HTML">HTML</option>
+            <option value="CSS">CSS</option>
+          </select>
+        </div>
+
+
+            <!-- Self-Introduction -->
+            <div class="mb-2">
+              <%= form.label :jigoshokai, "自己紹介", class: "form-label mb--0" %>
+              <%= form.text_area :jigoshokai, class: "form-control", rows: 1 %>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-2">
+              <%= form.label :city, "市区町村", class: "form-label mb-0" %>
+              <%= form.select :city, options_for_select(["ヤンゴン", "マンダレー", "東京", "大阪", "ニューヨーク", "ロサンゼルス", "ロンドン", "マンチェスター"]), { include_blank: '選択してください' }, class: "form-select", required: true %>
+            </div>
+
+            
+            <!-- Profile Image Display -->
+            <div class="mb-2 text-center">
+              <% if @m_user.profile.present? %>
+                <div class="d-flex flex-column align-items-start">
+                <span class="h6">プロフィールの写真</span>
+                  <%= image_tag @m_user.profile, class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+                </div>
+                
+              <% else %>
+                <div class="d-flex flex-column align-items-start">
+                  <span class="h6">プロフィールの写真</span>
+                  <%= image_tag "default_profile.png", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+                </div>
+                
+              <% end %>
+            </div>
+
+            <!-- Profile Image -->
+            <div class="mb-3">
+              <%= form.label :profile, "プロフィール画像", class: "form-label mb-0" %>
+              <%= form.file_field :profile, class: "form-control" %>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-flex justify-content-start">
+              <%= form.submit "更新", class: "btn btn-success" %>
+            </div>
+          <% end %>
+      </div>
+    </diV>
+  </div>
+</div>

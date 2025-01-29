@@ -32,7 +32,7 @@
 
   <body>
 
-  <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom border-dark">
+  <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom border-dark fixed-top">
   <div class="container-fluid mx-4">
     <a class="navbar-brand h1 fw-bold" href="/home">ジョプ検索サイト</a>
     <button 
@@ -52,13 +52,13 @@
           <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(home_path) %>" href="/home">ホーム</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(register_path) %>" href="/register">ユーザーリスト</a>
+          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(register_path) %>" href="#">ユーザーリスト</a>
         </li>
         <li class="nav-item">
           <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="#">求人一覧</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="#">登録</a>
+          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/register">登録</a>
         </li>
         <li class="nav-item">
           <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/login">ログイン</a>

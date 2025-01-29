@@ -1,25 +1,19 @@
 Rails.application.routes.draw do
-  get "m_companies/new"
-  get "m_companies/create"
-  get "m_companies/show"
-  get "m_companies/edit"
-  get "m_companies/update"
-  get "m_companies/destroy"
-  
 
-   root 'home#index'
+  root 'home#index'
 
   get 'home', to: 'home#index'
   get 'register', to: 'home#register'
   get 'contact', to: 'pages#contact'
 
   # User Authentication
-  get 'signupforusers', to: 'm_users#new'
-  post 'signupforusers', to: 'm_users#create'
+  resources :m_users
+
 
   # Company Authentication
-  get 'signupforcompanies', to: 'm_companies#new'
-  post 'signupforcompanies', to: 'm_companies#create'
+  resources :m_companies
+
+
 
   #Users and Companies Logout (shared)
   get '/login', to: 'sessions#new', as: 'login'
