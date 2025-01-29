@@ -16,16 +16,14 @@ Rails.application.routes.draw do
   # User Authentication
   get 'signupforusers', to: 'm_users#new'
   post 'signupforusers', to: 'm_users#create'
-  get 'loginforusers', to: 'sessions#new', defaults: { type: "user" }
-  post 'loginforusers', to: 'sessions#create', defaults: { type: "user" }
 
   # Company Authentication
   get 'signupforcompanies', to: 'm_companies#new'
   post 'signupforcompanies', to: 'm_companies#create'
-  get 'loginforcompanies', to: 'sessions#new', defaults: { type: "company" }
-  post 'loginforcompanies', to: 'sessions#create', defaults: { type: "company" }
 
   #Users and Companies Logout (shared)
+  get '/login', to: 'sessions#new', as: 'login'
+  post '/login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
 
 end

@@ -61,12 +61,19 @@
           <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="#">登録</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="#">ログイン</a>
+          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/login">ログイン</a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+<% flash.each do |key, message| %>
+<div class="d-flex justify-content-center m-0">
+<span class="m-0 mt-3 alert alert-<%= key == "alert" ? "danger" : "success" %>">
+    <%= message %>
+  </span>
+</div>
+<% end %>
 
 
 
