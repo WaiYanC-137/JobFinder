@@ -1,10 +1,20 @@
 default: &default
   adapter: mysql2
   encoding: utf8
-  username: root       # XAMPP default username
-  password:           # Default password is empty unless you set one in XAMPP
-  host: 127.0.0.1
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  port: <%= ENV['DB_PORT'] %>
+  database: <%= ENV['DB_NAME'] %>
 
 development:
   <<: *default
-  database: jobfinder  # Database name for development environment
+  database: <%= ENV['DB_NAME'] %>
+
+test:
+  <<: *default
+  database: <%= ENV['DB_NAME'] %>
+
+production:
+  <<: *default
+  database: <%= ENV['DB_NAME'] %>
