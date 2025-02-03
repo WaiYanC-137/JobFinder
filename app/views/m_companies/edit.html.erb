@@ -1,2 +1,69 @@
-<h1>MCompanies#edit</h1>
-<p>Find me in app/views/m_companies/edit.html.erb</p>
+<style>
+  .content {
+    padding-bottom: 100px;
+  }
+</style>
+
+<div class="container-fluid px-5 content">
+  <div class="row">
+    <div class="col-6">
+      <div class="test">
+        <h3>企業情報編集</h3>
+        <%= form_with model: @m_company, url: m_company_path(@m_company), method: :patch, local: true do |form| %>
+          
+          <!-- Company Name -->
+          <div class="mb-2">
+            <%= form.label :name, "会社名", class: "form-label mb-0" %>
+            <%= form.text_field :name, class: "form-control", required: true %>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="mb-2">
+            <%= form.label :phone, "電話番号", class: "form-label mb-0" %>
+            <%= form.telephone_field :phone, class: "form-control", required: true %>
+          </div>
+
+          <!-- Commuting Location (通勤地) -->
+          <div class="mb-2">
+            <%= form.label :location_id, "通勤地", class: "form-label mb-0" %>
+            <%= form.select :location_id, TLocation.pluck(:city, :id), { prompt: '選択してください' }, class: "form-select", required: true %>
+        </div>
+
+
+          <!-- Address (住所) -->
+          <div class="mb-2">
+            <%= form.label :address, "住所", class: "form-label mb-0" %>
+            <%= form.text_field :address, class: "form-control", required: true %>
+          </div>
+
+          <!-- About the Company -->
+          <div class="mb-2">
+            <%= form.label :info, "企業について", class: "form-label mb-0" %>
+            <%= form.text_area :info, class: "form-control", rows: 3 %>
+          </div>
+
+          <!-- Company Logo Display -->
+          <!-- Company Logo Display -->
+            <% if @m_company.persisted? && @m_company.logo.attached? %>
+                <%= image_tag @m_company.logo, class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+            <% else %>
+                <%= image_tag "default_profile.png", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+            <% end %>
+
+
+          <!-- Logo Upload -->
+          <div class="mb-3">
+            <%= form.label :logo, "ロゴ画像", class: "form-label mb-0" %>
+            <%= form.file_field :logo, class: "form-control", direct_upload: true %>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-flex justify-content-start">
+            <%= form.submit "更新", class: "btn btn-success" %>
+          </div>
+
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
