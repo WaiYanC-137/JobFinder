@@ -65,5 +65,7 @@ end
 gem 'mysql2', '>= 0.4.4'
 gem 'bcrypt', '~> 3.1.7'
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'image_processing', '~> 1.2'
+
 
 

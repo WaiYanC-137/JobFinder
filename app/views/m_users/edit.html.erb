@@ -31,8 +31,8 @@
 
           <!-- Skills -->
           <div class="mb-2">
-            <%= form.label :skill_ids, "スキル", class: "form-label mb-0" %>
-            <%= form.select :skill_ids, TSkill.pluck(:title, :id), { prompt: "選択してください", multiple: true }, class: "form-select" %>
+            <%= form.label :t_skill_ids, "スキル", class: "form-label mb-0" %>
+            <%= form.select :t_skill_ids, TSkill.pluck(:title, :id), { prompt: "選択してください", multiple: true }, class: "form-select" %>
           </div>
 
           <!-- Self-Introduction -->
@@ -48,24 +48,18 @@
           </div>
 
           <!-- Profile Image Display -->
-          <div class="mb-2 text-center">
-            <% if @m_user.profile.present? %>
-              <div class="d-flex flex-column align-items-start">
-                <span class="h6">プロフィールの写真</span>
-                <%= image_tag @m_user.profile_picture, class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
-              </div>
-            <% else %>
-              <div class="d-flex flex-column align-items-start">
-                <span class="h6">プロフィールの写真</span>
-                <%= image_tag "default_profile.png", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
-              </div>
-            <% end %>
-          </div>
+          <% if @m_user.profile_picture.attached? %>
+            <%= image_tag @m_user.profile_picture, class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+          <% else %>
+            <%= image_tag "default_profile.png", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+          <% end %>
+
           
           <!-- Profile Image -->
           <div class="mb-3">
             <%= form.label :profile_picture, "プロフィール画像", class: "form-label mb-0" %>
-            <%= form.file_field :profile_picture, class: "form-control" %>
+            <%= form.file_field :profile_picture, class: "form-control", direct_upload: true %>
+
           </div>
 
           <!-- Submit Button -->
