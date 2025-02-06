@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get 'home', to: 'home#index'
   get 'register', to: 'home#register'
   get 'contact', to: 'pages#contact'
+  get 'joblist', to: 'home#joblist'
 
   # User Authentication
   resources :m_users
