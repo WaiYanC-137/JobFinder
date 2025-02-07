@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   get 'home', to: 'home#index'
   get 'register', to: 'home#register'
-  get 'contact', to: 'pages#contact'
+  get 'userlist', to: 'home#userlist'
   get 'joblist', to: 'home#joblist'
 
   # User Authentication
@@ -20,6 +20,6 @@ Rails.application.routes.draw do
   #Users and Companies Logout (shared)
   get '/login', to: 'sessions#new', as: 'login'
   post '/login', to: 'sessions#create'
-  delete 'logout', to: 'sessions#destroy'
+  get '/logout', to: 'sessions#destroy'
 
 end

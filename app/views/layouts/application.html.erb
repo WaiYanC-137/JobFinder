@@ -17,6 +17,9 @@
     <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" %>
     <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" %>
     <%= stylesheet_link_tag "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" %>
+  <!-- Use this instead -->
+<%= javascript_include_tag 'application' %>
+
 
   </head>
 
@@ -30,45 +33,77 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(home_path) %>" href="/home">ホーム</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?("#") %>" href="#">ユーザーリスト</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/joblist">求人一覧</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(register_path) %>" href="/register">登録</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/login">ログイン</a>
-            </li>
+            <!-- Display these menu items if no user is logged in -->
+            <% if current_user.nil? && current_company.nil? %>
+              <li class="nav-item">
+                <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(home_path) %>" href="/home">ホーム</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/joblist') %>" href="/joblist">求人一覧</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/register') %>" href="/register">登録</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/login') %>" href="/login">ログイン</a>
+              </li>
+            <% elsif current_user.present? %>
+              <!-- Display these menu items if a user is logged in -->
+              <li class="nav-item">
+                <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/joblist') %>" href="/joblist">求人一覧</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <%= current_user.name %>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="userProfileDropdown">
+                  <li><%= link_to 'プロフィール', "#", class: 'dropdown-item' %></li>
+                  <%= link_to 'ログアウト', logout_path, method: :delete, data: { turbolinks: false }, class: 'dropdown-item' %>
+
+                </ul>
+              </li>
+            <% elsif current_company.present? %>
+              <!-- Display these menu items if a company is logged in -->
+              <li class="nav-item">
+                <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/userlist') %>" href="/userlist">ユーザーリスト</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/boshuusho') %>" href="/boshuusho">募集情報</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="companyProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <%= current_company.name %>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="companyProfileDropdown">
+                  <li><%= link_to 'プロフィール',"#", class: 'dropdown-item' %></li>
+                  <li><%= link_to 'ログアウト', logout_path, method: :delete, class: 'dropdown-item' %></li>
+                </ul>
+              </li>
+            <% end %>
           </ul>
         </div>
       </div>
     </nav>
 
     <!-- Flash Messages -->
-   <div class="d-flex justify-content-center mt-3">
-  <ul class="list-group">
-    <% flash.each do |key, messages| %>
-      <% # Ensure messages is an array, otherwise just display the string directly %>
-      <% if messages.is_a?(Array) %>
-        <% messages.each do |message| %>
-          <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success" %>">
-            <%= message %>
-          </li>
+    <div class="d-flex justify-content-center my-2">
+      <ul class="list-group">
+        <% flash.each do |key, messages| %>
+          <% # Ensure messages is an array, otherwise just display the string directly %>
+          <% if messages.is_a?(Array) %>
+            <% messages.each do |message| %>
+              <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success" %>">
+                <%= message %>
+              </li>
+            <% end %>
+          <% else %>
+            <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success" %>">
+              <%= messages %>
+            </li>
+          <% end %>
         <% end %>
-      <% else %>
-        <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success" %>">
-          <%= messages %>
-        </li>
-      <% end %>
-    <% end %>
-  </ul>
-</div>
+      </ul>
+    </div>
 
     <!-- Yield Content (Main Content) -->
     <%= yield %>
@@ -79,7 +114,5 @@
       <span class="me-3">operated by</span>
       <a class="text-decoration-none text-primary">cybermissions myanmar co,ltd</a>
     </footer>
-
-    <!-- JavaScript for Handling Flash Messages -->
-      </body>
+  </body>
 </html>
