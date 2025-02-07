@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_31_092350) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_06_100000) do
   create_table "active_storage_attachments", charset: "utf8", collation: "utf8_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -92,6 +92,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_092350) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "t_job_offers", charset: "utf8", collation: "utf8_general_ci", force: :cascade do |t|
+    t.decimal "minsalary", precision: 10, scale: 2
+    t.decimal "maxsalary", precision: 10, scale: 2
+    t.bigint "location_id", null: false
+    t.bigint "category_id", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_t_job_offers_on_category_id"
+    t.index ["location_id"], name: "index_t_job_offers_on_location_id"
+  end
+
+  create_table "t_job_offers_skills", id: false, charset: "utf8", collation: "utf8_general_ci", force: :cascade do |t|
+    t.bigint "t_job_offer_id", null: false
+    t.bigint "t_skill_id", null: false
+    t.index ["t_job_offer_id"], name: "index_t_job_offers_skills_on_t_job_offer_id"
+    t.index ["t_skill_id"], name: "index_t_job_offers_skills_on_t_skill_id"
+  end
+
   create_table "t_locations", charset: "utf8", collation: "utf8_general_ci", force: :cascade do |t|
     t.string "city"
     t.datetime "created_at", null: false
@@ -113,4 +132,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_092350) do
   add_foreign_key "m_users", "t_locations", column: "location_id"
   add_foreign_key "m_users_t_skills", "m_users"
   add_foreign_key "m_users_t_skills", "t_skills"
+  add_foreign_key "t_job_offers", "t_categories", column: "category_id"
+  add_foreign_key "t_job_offers", "t_locations", column: "location_id"
 end

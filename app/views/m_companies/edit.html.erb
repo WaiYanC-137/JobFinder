@@ -14,32 +14,32 @@
           <!-- Company Name -->
           <div class="mb-2">
             <%= form.label :name, "会社名", class: "form-label mb-0" %>
-            <%= form.text_field :name, class: "form-control", required: true %>
+            <%= form.text_field :name, class: "form-control" %>
           </div>
 
           <!-- Phone Number -->
           <div class="mb-2">
             <%= form.label :phone, "電話番号", class: "form-label mb-0" %>
-            <%= form.telephone_field :phone, class: "form-control", required: true %>
+            <%= form.telephone_field :phone, class: "form-control" %>
           </div>
 
           <!-- Commuting Location (通勤地) -->
           <div class="mb-2">
             <%= form.label :location_id, "通勤地", class: "form-label mb-0" %>
-            <%= form.select :location_id, TLocation.pluck(:city, :id), { prompt: '選択してください' }, class: "form-select", required: true %>
+            <%= form.select :location_id, TLocation.pluck(:city, :id), { prompt: '選択してください' }, class: "form-select" %>
           </div>
 
 
           <!-- Address (住所) -->
           <div class="mb-2">
             <%= form.label :address, "住所", class: "form-label mb-0" %>
-            <%= form.text_field :address, class: "form-control", required: true %>
+            <%= form.text_field :address, class: "form-control" %>
           </div>
 
           <!-- About the Company -->
           <div class="mb-2">
             <%= form.label :info, "企業について", class: "form-label mb-0" %>
-            <%= form.text_area :info, class: "form-control", rows: 3 %>
+            <%= form.text_area :info, class: "form-control", rows: 1 %>
           </div>
 
           <!-- Company Logo Display -->

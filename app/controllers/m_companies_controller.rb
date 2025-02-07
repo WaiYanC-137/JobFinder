@@ -21,7 +21,7 @@ class MCompaniesController < ApplicationController
     if @m_company.save
       redirect_to login_path, notice: 'アカウントが作成されました。ログインしてください。'
     else
-      flash.now[:alert] = "アカウントが作成されませんでした。"
+      flash.now[:alert] = @m_company.errors.full_messages
       render :new, status: :unprocessable_entity
     end
   end

@@ -1,0 +1,67 @@
+ja:
+  activerecord:
+    attributes:
+      m_company:
+        name: ""
+        email: ""
+        password: ""
+        password_confirmation: ""
+      m_user:
+        name: ""
+        email: ""
+        password: ""
+        password_confirmation: ""
+    errors:
+      models:
+        m_company:
+          attributes:
+            name:
+              blank: "名前を入力してください"
+            email:
+              blank: "メールアドレスを入力してください"
+              invalid: "無効なメールアドレスです"
+            password:
+              blank: "パスワードを入力してください"
+              too_short: "パスワードは%{count}文字以上で入力してください"
+            password_confirmation:
+              blank: "確認用パスワードを入力してください"
+              confirmation: "パスワード確認が一致しません"
+        m_user:
+          attributes:
+            name:
+              blank: "名前を入力してください"
+            email:
+              blank: "メールアドレスを入力してください"
+              invalid: "無効なメールアドレスです"
+            password:
+              blank: "パスワードを入力してください"
+              too_short: "パスワードは%{count}文字以上で入力してください"
+            password_confirmation:
+              blank: "確認用パスワードを入力してください"
+              confirmation: "パスワード確認が一致しません"
+    messages:
+      blank: "を入力してください"
+      too_short: "は%{count}文字以上で入力してください"
+      invalid: "は無効です"
+      confirmation: "は一致しません"
+
+  datetime:
+    distance_in_words:
+      less_than_x_minutes:
+        one: "1分未満"
+        other: "%{count}分未満"
+      x_minutes:
+        one: "1分"
+        other: "%{count}分"
+      about_x_hours:
+        one: "約1時間"
+        other: "約%{count}時間"
+      x_days:
+        one: "1日"
+        other: "%{count}日"
+      about_x_months:
+        one: "約1ヶ月"
+        other: "約%{count}ヶ月"
+      x_years:
+        one: "1年"
+        other: "%{count}年"

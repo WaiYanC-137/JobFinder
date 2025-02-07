@@ -1,7 +1,7 @@
 <div class="container-fluid">
-  <div class="border border-dark mt-3 pb-3">
+  <div class="border border-dark pb-3">
     <h1 class="h3 bg-secondary text-white p-2 mb-4">求人を検索</h1>
-    <%= form_with url: "#", method: :post do |form| %>
+    <%= form_with url: "joblist", method: :get do |form| %>
       <div class="row">
         <!-- First Table (職種 & 給与) -->
         <div class="col-md-6">
@@ -12,10 +12,10 @@
                   <%= form.label :category_id, "職種", class: "form-label mb-0" %>
                 </td>
                 <td class="pb-3">
-                  <%= form.select :category_id, 
-                        options_for_select([["選択してください", "", { disabled: true, selected: true }]] + @categories), 
-                        {}, 
-                        { class: "form-select", required: true } %>
+                <%= form.select :category_id, 
+                    options_for_select(@categories), 
+                    {prompt: "選択してください" },
+                    { class: "form-select" } %>
                 </td>
               </tr>
               <tr>
@@ -34,6 +34,9 @@
               </tr>
             </tbody>
           </table>
+          <div class="text-start ms-5 ps-2 mt-3">
+            <%= form.submit "検索", class: "btn btn-success btn-lg ms-5" %>
+          </div>
         </div>
 
         <!-- Second Table (スキル & 通勤地) -->
@@ -46,9 +49,9 @@
                 </td>
                 <td class="pb-3">
                   <%= form.select :skill_id, 
-                        options_for_select([["選択してください", "", { disabled: true, selected: true }]] + @skills), 
-                        {}, 
-                        { class: "form-select", multiple: true, id: "skill_select", size: 1 } %>
+                        options_for_select(@skills), 
+                        {prompt: "選択してください"}, 
+                        { class: "form-select", id: "skill_select" } %>
                 </td>
               </tr>
               <tr>
@@ -57,38 +60,75 @@
                 </td>
                 <td class="pb-3">
                   <%= form.select :location_id, 
-                        options_for_select([["選択してください", "", { disabled: true, selected: true }]] + @locations), 
-                        {}, 
-                        { class: "form-select", required: true } %>
+                        options_for_select(@locations), 
+                        {prompt: "選択してください"}, 
+                        { class: "form-select"} %>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-
-      <div class="text-start ms-5 ps-2">
-        <%= form.submit "検索", class: "btn btn-success" %>
-      </div>
     <% end %>
   </div>
+
+  <!-- Loop through the paginated job offers -->
+  <% @joboffers.each do |job_offer| %>
+    <div class="mt-4 border border-dark p-3">
+      <div class="d-flex justify-content-between">
+        <h1 class="h3 text-start text-success mb-4"><%= job_offer.category.title %></h1>
+        <span class="">Posted <span class="badge bg-success fs-6 p-2 mx-2"><%= time_ago_in_words(job_offer.created_at) %></span> ago</span>
+      </div>
+    
+      <div class="w-50">
+        <table class="w-50 text-start">
+          <tr>
+            <th class="p-2">給料</th>
+            <td class="p-2 badge bg-success fs-6 mb-2"><%= "#{job_offer.minsalary}~#{job_offer.maxsalary}" %></td>
+          </tr>
+          <tr>
+            <th>勤務地</th>
+            <td><a href="#" class="text-decoration-none text-secondary btn border-dark"><i class="fa-solid fa-location-dot me-2"></i><%= job_offer.location.city %></a></td>
+          </tr>
+        </table>
+      </div>
+
+      <p class="mt-3 w-75">
+        <%= job_offer.description %>
+      </p>
+
+      <div class="w-50">
+        <table class="w-50 text-start">
+          <tr>
+            <th class="fw-bold p-2">職種</th>
+            <td class="p-2"><%= job_offer.category.title %></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="mt-2">
+        <% job_offer.t_skills.each do |skill| %>
+          <span class="badge bg-primary me-3 fs-6" style="color:white;"><%= skill.title %></span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Pagination controls -->
+<div class="mt-4 d-flex justify-content-start">
+  <%= paginate @joboffers %>
 </div>
 
+</div>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+
+document.addEventListener("DOMContentLoaded", function () {
   const skillSelect = document.getElementById("skill_select");
 
-  skillSelect.addEventListener("mousedown", function(event) {
-    if (!this.classList.contains("expanded")) {
-      event.preventDefault(); // Prevent default select behavior
-      this.size = Math.min(this.options.length, 5); // Expand select (limit size to 5)
-      this.classList.add("expanded"); // Add class to style it
-    }
-  });
-
-  skillSelect.addEventListener("blur", function() {
-    this.size = 1; // Collapse select when clicked away
-    this.classList.remove("expanded"); // Remove class
-  });
+  if (skillSelect) {
+    skillSelect.addEventListener("click", function () {
+      skillSelect.setAttribute("multiple", "true");
+    });
+  }
 });
 </script>

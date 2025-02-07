@@ -2,6 +2,7 @@
   .content {
     padding-bottom: 100px;
   }
+  
 </style>
 
 <div class="container-fluid px-5 content">
@@ -14,25 +15,33 @@
           <!-- Name -->
           <div class="mb-2">
             <%= form.label :name, "ユーザー名", class: "form-label mb-0" %>
-            <%= form.text_field :name, class: "form-control", required: true %>
+            <%= form.text_field :name, class: "form-control" %>
           </div>
 
           <!-- Phone -->
           <div class="mb-2">
             <%= form.label :phone, "電話番号", class: "form-label mb-0" %>
-            <%= form.telephone_field :phone, class: "form-control", required: true %>
+            <%= form.telephone_field :phone, class: "form-control" %>
           </div>
 
           <!-- Job Type (Category) -->
           <div class="mb-2">
-            <%= form.label :category_id, "職種", class: "form-label mb-0" %>
-            <%= form.select :category_id, TCategory.pluck(:title, :id), { prompt: "職種を選択してください" }, class: "form-select" %>
-          </div>
+  <%= form.label :category_id, "職種", class: "form-label mb-0" %>
+  <%= form.select :category_id, 
+      options_for_select(@categories.map { |category| [category.title, category.id] }, @m_user.category_id), 
+      { prompt: "職種を選択してください" },
+      { class: "form-select" } %>
+
+</div>
 
           <!-- Skills -->
           <div class="mb-2">
             <%= form.label :t_skill_ids, "スキル", class: "form-label mb-0" %>
-            <%= form.select :t_skill_ids, TSkill.pluck(:title, :id), { prompt: "選択してください", multiple: true }, class: "form-select" %>
+            <%= form.select :t_skill_ids, 
+      options_for_select(@skills.map { |skill| [skill.title, skill.id] }, @m_user.t_skills.pluck(:id)), 
+      { prompt: "選択してください", multiple: true}, 
+      { class: "form-select", id: "skill_select" } %>
+    
           </div>
 
           <!-- Self-Introduction -->
@@ -44,7 +53,9 @@
           <!-- Location -->
           <div class="mb-2">
             <%= form.label :location_id, "市区町村", class: "form-label mb-0" %>
-            <%= form.select :location_id, TLocation.pluck(:city, :id), { prompt: '選択してください' }, class: "form-select", required: true %>
+            <%= form.select :location_id,
+            options_for_select(@locations.map { |location| [location.city, location.id] }, @m_user.location_id),
+             { prompt: '選択してください' }, class: "form-select" %>
           </div>
 
           <!-- Profile Image Display -->

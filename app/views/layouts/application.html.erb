@@ -10,19 +10,10 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-
-    
-    
     <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" %>
     <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" %>
     <%= stylesheet_link_tag "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" %>
@@ -30,60 +21,65 @@
   </head>
 
   <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom border-dark sticky-top">
+      <div class="container-fluid mx-4">
+        <a class="navbar-brand h1 fw-bold" href="/home">ジョプ検索サイト</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(home_path) %>" href="/home">ホーム</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?("#") %>" href="#">ユーザーリスト</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/joblist">求人一覧</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(register_path) %>" href="/register">登録</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/login">ログイン</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-  <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom border-dark sticky-top">
-  <div class="container-fluid mx-4">
-    <a class="navbar-brand h1 fw-bold" href="/home">ジョプ検索サイト</a>
-    <button 
-      class="navbar-toggler" 
-      type="button" 
-      data-bs-toggle="collapse" 
-      data-bs-target="#navbarNav" 
-      aria-controls="navbarNav" 
-      aria-expanded="false" 
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(home_path) %>" href="/home">ホーム</a>
+    <!-- Flash Messages -->
+   <div class="d-flex justify-content-center mt-3">
+  <ul class="list-group">
+    <% flash.each do |key, messages| %>
+      <% # Ensure messages is an array, otherwise just display the string directly %>
+      <% if messages.is_a?(Array) %>
+        <% messages.each do |message| %>
+          <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success" %>">
+            <%= message %>
+          </li>
+        <% end %>
+      <% else %>
+        <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success" %>">
+          <%= messages %>
         </li>
-        <li class="nav-item">
-          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(register_path) %>" href="#">ユーザーリスト</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/joblist">求人一覧</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/register">登録</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('#') %>" href="/login">ログイン</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-<% flash.each do |key, message| %>
-<div class="d-flex justify-content-center mt-5">
-<span class="m-0 mt-3 alert alert-<%= key == "alert" ? "danger" : "success" %>">
-    <%= message %>
-  </span>
+      <% end %>
+    <% end %>
+  </ul>
 </div>
-<% end %>
 
-
-
+    <!-- Yield Content (Main Content) -->
     <%= yield %>
 
-    <footer class="bg-black text-white text-center py-2 px-0 w-100 position-fixed bottom-0 start-0">
+    <!-- Footer -->
+    <footer class="bg-black text-white text-center py-3 px-0 w-100 position-fixed bottom-0 start-0">
       <span class="me-3">&copy; 2021</span>
-      <span class="me-3">operated by</span> 
-      <a class="text-decoration-none text-primary">cybermissions myanmar co,ltd
-      </a>    
+      <span class="me-3">operated by</span>
+      <a class="text-decoration-none text-primary">cybermissions myanmar co,ltd</a>
     </footer>
 
-  </body>
+    <!-- JavaScript for Handling Flash Messages -->
+      </body>
 </html>
