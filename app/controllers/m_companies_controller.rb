@@ -9,11 +9,11 @@ class MCompaniesController < ApplicationController
     # Check if the email already exists in the MUser or MCompany table
     if MUser.exists?(email: @m_company.email)
       flash.now[:alert] = "このメールアドレスはすでにユーザーアカウントとして使用されています。"
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity and return
       return
     elsif MCompany.exists?(email: @m_company.email)
       flash.now[:alert] = "このメールアドレスはすでに会社アカウントとして使用されています。"
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity and return
       return
     end
   
@@ -22,7 +22,7 @@ class MCompaniesController < ApplicationController
       redirect_to login_path, notice: 'アカウントが作成されました。ログインしてください。'
     else
       flash.now[:alert] = @m_company.errors.full_messages
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity and return
     end
   end
   

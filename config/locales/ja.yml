@@ -4,6 +4,7 @@ ja:
       m_company:
         name: ""
         email: ""
+        phone: ""
         password: ""
         password_confirmation: ""
       m_user:
@@ -17,6 +18,8 @@ ja:
           attributes:
             name:
               blank: "名前を入力してください"
+            phone:
+              blank: "電話番号を入力してください"
             email:
               blank: "メールアドレスを入力してください"
               invalid: "無効なメールアドレスです"
@@ -25,7 +28,9 @@ ja:
               too_short: "パスワードは%{count}文字以上で入力してください"
             password_confirmation:
               blank: "確認用パスワードを入力してください"
+              too_short: "パスワードは%{count}文字以上で入力してください"
               confirmation: "パスワード確認が一致しません"
+              mismatch: "パスワードが一致しません"
         m_user:
           attributes:
             name:
@@ -38,13 +43,15 @@ ja:
               too_short: "パスワードは%{count}文字以上で入力してください"
             password_confirmation:
               blank: "確認用パスワードを入力してください"
+              too_short: "パスワードは%{count}文字以上で入力してください"
               confirmation: "パスワード確認が一致しません"
+              mismatch: "パスワードが一致しません"
     messages:
       blank: "を入力してください"
       too_short: "は%{count}文字以上で入力してください"
       invalid: "は無効です"
       confirmation: "は一致しません"
-
+      
   datetime:
     distance_in_words:
       less_than_x_minutes:

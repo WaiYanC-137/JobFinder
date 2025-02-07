@@ -7,12 +7,12 @@
             <p class="text-center">
                 <i class="fa-solid fa-magnifying-glass fs-1"></i>
             </p>
-            <p class="fs-5 mb-0 text-center">
-                あなたのスキルに合った仕事を閲覧し、
-                提案を提出してください。あなたのプ
-                ロフィールを完成するために、サイン
-                アップしてください。
+            <p class="fs-5 mb-0 text-start">
+            あなたのスキルに合った仕事を閲覧し、
+            提案を提出してください。あなたのプロ
+            フィールを完成するために、<%= link_to "サインアップ", new_m_user_path , class: "text-decoration-none"%>してください。
             </p>
+
         </div>
     </div>
     <div class="col-5 p-0">
@@ -20,12 +20,13 @@
             <p class="text-center">
                 <i class="fa-regular fa-handshake fs-1"></i>
             </p>
-            <p class="fs-5 mb-0 text-center">
+            <p class="fs-5 mb-0 text-start">
             求人を投稿すると、数分以内に提
             案が届きます。お気に入りの人を
             雇って、仕事を完了しましょう。あ
-            なたの仕事を投稿するためにサイ
-            ンアップしてください。
+            なたの仕事を投稿するために
+            <%= link_to "サインアップ", new_m_company_path , class: "text-decoration-none"%>
+            してください。
             </p>
         </div>
     </div>
@@ -34,8 +35,8 @@
             <p class="text-center">
                 <i class="fa-solid fa-list-check fs-1"></i>
             </p>
-            <p class="fs-5 mb-0 text-center">
-            ジョプ検索サイトを使用すると、連
+            <p class="fs-5 mb-0 text-start">
+            <%= link_to "ジョプ検索サイト", home_path , class: "text-decoration-none"%>を使用すると、連
             絡先を共有したり、直接通信したり
             できます。
             </p>

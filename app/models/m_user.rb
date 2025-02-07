@@ -7,12 +7,20 @@ class MUser < ApplicationRecord
   has_secure_password validations: false
 
   validates :name, presence: true
-
+  
   # Email validations
   validates :email, presence: { message: :blank }, uniqueness: true
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: :invalid }, if: -> { email.present? }
+  validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]{2,}\z/i, message: :invalid }, if: -> { email.present? }
 
   # Password validations
-  validates :password, presence: { message: :blank }, on: :create
-  validates :password, length: { minimum: 6, message: :too_short }, if: -> { password.present? }, on: :create
+ validates :password, presence: { message: :blank }, on: :create
+ validates :password, length: { minimum: 6, message: :too_short }, if: -> { password.present? }, on: :create
+
+  # Password validations
+  validates :password_confirmation, presence: { message: :blank }, on: :create
+  validates :password_confirmation, presence: { message: :blank }, if: -> { password.present? }
+  validates :password_confirmation, length: { minimum: 6, message: :too_short }, if: -> { password_confirmation.present? }
+  validates :password, confirmation: { message: :mismatch }, if: -> { password.present? && password_confirmation.present? }
+
+
 end

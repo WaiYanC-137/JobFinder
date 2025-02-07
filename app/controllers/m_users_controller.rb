@@ -16,8 +16,6 @@ class MUsersController < ApplicationController
       render :new, status: :unprocessable_entity
       return
     end
-  
-
     # Proceed with saving the user if no conflicts
     if @m_user.save
       redirect_to login_path, notice: 'アカウントが作成されました。ログインしてください。' 
