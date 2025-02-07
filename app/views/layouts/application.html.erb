@@ -39,6 +39,9 @@
                 <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?(home_path) %>" href="/home">ホーム</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/userlist') %>" href="/userlist">ユーザーリスト</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/joblist') %>" href="/joblist">求人一覧</a>
               </li>
               <li class="nav-item">

@@ -1,1 +1,114 @@
-<hi></hi>
+<style>
+
+</style>
+<div class="container-fluid px-5">
+  <div class="border border-dark pb-3">
+    <h1 class="h3 p-2 mb-4 px-4" style="background:#F0F0F0;color:black;">求人を検索</h1>
+    <%= form_with url: "userlist", method: :get do |form| %>
+      <div class="row">
+        <!-- First Table (職種 & 給与) -->
+        <div class="col-md-6">
+          <table class="w-100">
+            <tbody>
+              <tr>
+                <td class="text-end align-middle pe-2 pb-3">
+                  <%= form.label :category_id, "職種", class: "form-label mb-0" %>
+                </td>
+                <td class="pb-3">
+                <%= form.select :category_id, 
+                    options_for_select(@categories), 
+                    {prompt: "選択してください" },
+                    { class: "form-select" } %>
+                </td>
+              </tr>
+              <tr>
+                    <td class="text-end align-middle pe-2 pb-3">
+                    <%= form.label :location_id, "通勤地", class: "form-label mb-0" %>
+                    </td>
+                    <td class="pb-3">
+                    <%= form.select :location_id, 
+                            options_for_select(@locations), 
+                            {prompt: "選択してください"}, 
+                            { class: "form-select"} %>
+                    </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="text-start ms-5 ps-2 mt-3">
+            <%= form.submit "検索", class: "btn btn-success btn-lg ms-5" %>
+          </div>
+        </div>
+
+        <!-- Second Table (スキル & 通勤地) -->
+        <div class="col-md-6 pe-5">
+          <table class="w-100">
+            <tbody>
+              <tr>
+                <td class="text-end align-middle pe-2 pb-3">
+                  <%= form.label :skill_id, "スキル", class: "form-label mb-0" %>
+                </td>
+                <td class="pb-3">
+                  <%= form.select :skill_id, 
+                        options_for_select(@skills), 
+                        {prompt: "選択してください"}, 
+                        { class: "form-select", id: "skill_select" } %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="mt-5">
+  <h1 class="h4 mb-3"><%= @m_users.count %> ユーザーが見つかりました。</h1>
+  <div class="border border-dark">
+    <% @m_users.each do |user| %>
+      <div class="row mb-3">
+          <div class="col-2">
+              <div class="d-flex justify-content-center align-items-center h-100">
+                  <!-- Profile Image Display -->
+                  <% if user.profile_picture.attached? %>
+                    <%= image_tag user.profile_picture, class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+                  <% else %>
+                    <%= image_tag "default_profile.png", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+                  <% end %>
+              </div>
+          </div>
+          <div class="col-10">
+              <div class="px-5 py-3">
+                  <h1 class="text-success h3 mb-3"><%= user.name %></h1>
+                  <div class="mb-4">
+                      <% user.t_skills.each do |skill| %>
+                        <span class="bg-primary px-3 py-2 rounded me-3" style="color:white;"><%= skill.title %></span>
+                      <% end %>
+                  </div>
+                  <div class="fs-5 fw-600">
+                    <%= user.about %>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <% end %>
+  </div>
+   <!-- Pagination controls -->
+<div class="mt-4 d-flex justify-content-start">
+  <%= paginate @m_users %>
+</div>
+</div>
+
+  
+</div>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+  const skillSelect = document.getElementById("skill_select");
+
+  if (skillSelect) {
+    skillSelect.addEventListener("click", function () {
+      skillSelect.setAttribute("multiple", "true");
+    });
+  }
+});
+</script>
