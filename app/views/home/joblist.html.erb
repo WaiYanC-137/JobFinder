@@ -74,7 +74,7 @@
 
   <!-- Loop through the paginated job offers -->
   <% @joboffers.each do |job_offer| %>
-    <div class="mt-4 border border-dark p-3">
+    <div class="mt-2 border border-dark p-3">
       <div class="d-flex justify-content-between">
         <h1 class="h3 text-start text-success mb-4"><%= job_offer.category.title %></h1>
         <span class="">Posted <span class="badge bg-success fs-6 p-2 mx-2"><%= time_ago_in_words(job_offer.created_at) %></span> ago</span>
@@ -115,7 +115,7 @@
   <% end %>
 
   <!-- Pagination controls -->
-<div class="mt-4 d-flex justify-content-start">
+<div class="mt-2 d-flex justify-content-start">
   <%= paginate @joboffers %>
 </div>
 

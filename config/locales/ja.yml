@@ -51,7 +51,7 @@ ja:
       too_short: "は%{count}文字以上で入力してください"
       invalid: "は無効です"
       confirmation: "は一致しません"
-      
+
   datetime:
     distance_in_words:
       less_than_x_minutes:

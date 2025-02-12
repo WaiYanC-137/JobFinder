@@ -26,7 +26,9 @@ class MCompaniesController < ApplicationController
     end
   end
   
-
+  def show
+    @m_company=MCompany.find(params[:id])
+  end
   def edit
     @m_company = MCompany.find(params[:id])
   end

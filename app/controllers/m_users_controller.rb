@@ -25,6 +25,11 @@ class MUsersController < ApplicationController
     end
   end
 
+  def show
+    @m_user = MUser.find(params[:id])
+  end
+
+
   def edit
     @m_user = MUser.find(params[:id])
     @categories = TCategory.all 

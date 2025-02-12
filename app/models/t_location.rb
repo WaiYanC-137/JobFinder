@@ -1,6 +1,7 @@
 class TLocation < ApplicationRecord
 
-    has_many :users, class_name: 'MUser', foreign_key: 'city'
-    has_many :user_skills
-    has_many :skills, through: :user_skills
+        has_many :m_users, class_name: 'MUser', foreign_key: 'city'
+        has_many :m_companies, class_name: 'MCompany', foreign_key: 'city'
+
+
 end

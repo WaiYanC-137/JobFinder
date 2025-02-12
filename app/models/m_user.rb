@@ -1,9 +1,9 @@
 class MUser < ApplicationRecord
   has_one_attached :profile_picture
-  belongs_to :location, class_name: 'TLocation', foreign_key: 'city', optional: true
+  belongs_to :location, class_name: 'TLocation', foreign_key: 'location_id', optional: true
 
   has_and_belongs_to_many :t_skills
-  belongs_to :category, class_name: 'TCategory', foreign_key: 't_category_id', optional: true
+  belongs_to :category, class_name: 'TCategory', foreign_key: 'category_id', optional: true
   has_secure_password validations: false
 
   validates :name, presence: true

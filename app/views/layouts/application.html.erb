@@ -55,14 +55,15 @@
               <li class="nav-item">
                 <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/joblist') %>" href="/joblist">求人一覧</a>
               </li>
-              <li class="nav-item dropdown">
+              <li class="nav-item dropdown mx-3">
                 <a class="nav-link dropdown-toggle" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <%= current_user.name %>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="userProfileDropdown">
-                  <li><%= link_to 'プロフィール', "#", class: 'dropdown-item' %></li>
-                  <%= link_to 'ログアウト', logout_path, method: :delete, data: { turbolinks: false }, class: 'dropdown-item' %>
-
+                  <li><%= link_to 'プロフィールを見る', m_user_path(current_user.id), class: 'dropdown-item' %></li>
+                  <li><%= link_to 'プロフィール編集', edit_m_user_path(current_user), class: 'dropdown-item' %></li>
+                  <li><%= link_to 'パスワードの編集', "#", class: 'dropdown-item' %></li>
+                  <li><%= link_to 'ログアウト', logout_path, method: :delete, data: { turbo: false }, class: 'dropdown-item' %></li>
                 </ul>
               </li>
             <% elsif current_company.present? %>
@@ -74,12 +75,14 @@
                 <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/boshuusho') %>" href="/boshuusho">募集情報</a>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="companyProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <%= current_company.name %>
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="companyProfileDropdown">
-                  <li><%= link_to 'プロフィール',"#", class: 'dropdown-item' %></li>
-                  <li><%= link_to 'ログアウト', logout_path, method: :delete, class: 'dropdown-item' %></li>
+                <ul class="dropdown-menu" aria-labelledby="userProfileDropdown">
+                  <li><%= link_to 'プロフィールを見る', m_company_path(current_company.id), class: 'dropdown-item' %></li>
+                  <li><%= link_to 'プロフィール編集', edit_m_company_path(current_company), class: 'dropdown-item' %></li>
+                  <li><%= link_to 'パスワードの編集', "#", class: 'dropdown-item' %></li>
+                  <li><%= link_to 'ログアウト', logout_path, method: :delete, data: { turbo: false }, class: 'dropdown-item' %></li>
                 </ul>
               </li>
             <% end %>
