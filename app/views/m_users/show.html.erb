@@ -57,9 +57,14 @@
     <p class="mb-2"><i class="fa-solid fa-phone me-5"></i><%=@m_user.phone%></p>
     <p><i class="fa-solid fa-envelope me-5"></i><%=@m_user.email%></p>
   </div>
-  <div class="border border-dark py-2 px-3">
-    <h1 class="h3 mb-4">提案概要</h1>
-    <p class="mb-2"><%=@m_user.phone%></p>
-    <p><%=@m_user.email%></p>
+  <div class="border border-dark px-3 mt-2">
+  <h1 class="h3 mb-2">募集概要</h1>
+  <% @joboffers.each do |job_offer| %>
+      <p class="mb-3"><%= link_to job_offer.category.title, t_job_offer_path(job_offer.id) , class: "text-decoration-none" %>
+      <!-- You can add more fields as needed, e.g., salary, location, etc. -->
+  <% end %>
+  <div class="pagination d-flex justify-content-end mt-3">
+      <%= paginate @joboffers %>
   </div>
+</div>
 </div>

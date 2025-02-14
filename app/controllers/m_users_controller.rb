@@ -27,6 +27,8 @@ class MUsersController < ApplicationController
 
   def show
     @m_user = MUser.find(params[:id])
+    @joboffers = @m_user.t_job_offers.order(created_at: :desc).page(params[:page]).per(2)
+
   end
 
 

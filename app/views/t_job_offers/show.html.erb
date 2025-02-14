@@ -16,14 +16,19 @@
       </div>
 
       <div class="col-4">
-        <div class="d-flex flex-column align-items-end">
-          <!-- Here you can add the posted date or time ago -->
-          <p class="fs-5">Posted <%= time_ago_in_words(@job_offer.created_at) %> ago</p>
+  <div class="d-flex flex-column align-items-end justify-content-around h-100">
+    <p class="fs-5">Posted <%= time_ago_in_words(@job_offer.created_at) %> ago</p>
 
-          <!-- You can add a button here -->
-          <%= link_to 'Apply Now',"#", class: 'btn btn-success' %>
-        </div>
-      </div>
+    <% if @job_offer.m_users.exists?(id: current_user.id) %>
+      <!-- The user has already applied; disable the button -->
+      <%= link_to '提出済み', "#", class: 'btn btn-secondary disabled', style:"color:white;", aria: { disabled: true } %>
+    <% else %>
+      <!-- The user hasn't applied; enable the button -->
+      <%= link_to '提出', apply_job_offer_path(@job_offer), class: 'btn btn-success', style:"color:white;" %>
+    <% end %>
+  </div>
+</div>
+
     </div>
 
     <h5>仕事内容</h5>
@@ -34,3 +39,8 @@
     <p class="mt-2"><span class="fs-5">投稿 : </span> <%= @job_offer.company.name %></p>
   </div>
 </div>
+<% if logged_in_company? %>
+  <div>
+    i only want to show this only if login in as company
+  </div>
+<% end %>
