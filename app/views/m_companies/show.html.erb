@@ -19,7 +19,7 @@
 
     <!-- User Information Column -->
     <div class="col-10">
-      <div class="px-5 py-3 d-flex flex-column justify-content-start">
+      <div class="px-5 py-2 d-flex flex-column justify-content-start">
         
         <!-- User Name -->
         <h1 class="text-secondary h5 mb-3 w-25">
@@ -43,16 +43,23 @@
     </div>
 
   </div>
-  <p class="mb-3 mt-2"><%= @m_company.info%></p>
-  <div class="border border-dark py-2 px-3 mb-3">
+  <p class="mb-2 mt-3"><%= @m_company.info%></p>
+  <div class="border border-dark px-3 my-3">
     <h1 class="h3 mb-4">コンタクト</h1>
-    <p class="mb-2"><i class="fa-solid fa-phone me-5"></i><%=@m_company.phone%></p>
-    <p><i class="fa-solid fa-envelope me-5"></i><%=@m_company.email%></p>
-    <p><i class="fa-solid fa-envelope me-5"></i><%=@m_company.address%></p>
+    <p class="mb-2"><i class="fa-solid fa-phone me-5 fs-4"></i><%=@m_company.phone%></p>
+    <p class="mb-2"><i class="fa-solid fa-envelope me-5 fs-4"></i><%=@m_company.email%></p>
+    <p class="mb-2"><i class="fa-solid fa-address-book me-5 fs-4"></i><%=@m_company.address%></p>
   </div>
-  <div class="border border-dark py-2 px-3">
-    <h1 class="h3 mb-4">提案概要</h1>
-    <p class="mb-2"><%=@m_company.phone%></p>
-    <p><%=@m_company.email%></p>
+<div class="border border-dark py-2 px-3 mt-2">
+  <h1 class="h3 mb-3">募集概要</h1>
+  <% @joboffers.each do |job_offer| %>
+      <p class="mb-3"><%= link_to job_offer.category.title, t_job_offer_path(job_offer.id) , class: "text-decoration-none" %>
+      <span class="badge bg-primary ms-3 fs-6"><%=job_offer.m_users.count%></span></p>
+      <!-- You can add more fields as needed, e.g., salary, location, etc. -->
+  <% end %>
+  <div class="pagination d-flex justify-content-end mt-3">
+      <%= paginate @joboffers %>
   </div>
+</div>
+
 </div>

@@ -1,134 +1,215 @@
 <div class="container-fluid">
-  <div class="border border-dark pb-3">
+  <div class="border border-dark pb-3 mb-3">
     <h1 class="h3 p-2 mb-4 px-4" style="background:#F0F0F0;color:black;">求人を検索</h1>
+
     <%= form_with url: "joblist", method: :get do |form| %>
       <div class="row">
-        <!-- First Table (職種 & 給与) -->
+        <!-- Left Column: Category and Salary -->
         <div class="col-md-6">
           <table class="w-100">
             <tbody>
+              <!-- Category Selection -->
               <tr>
                 <td class="text-end align-middle pe-2 pb-3">
                   <%= form.label :category_id, "職種", class: "form-label mb-0" %>
                 </td>
-                <td class="pb-3">
-                <%= form.select :category_id, 
-                    options_for_select(@categories), 
-                    {prompt: "選択してください" },
-                    { class: "form-select" } %>
+                <td class="pb-3" colspan="3">
+                  <%= form.select :category_id,
+                      options_for_select(@categories, @category_id),
+                      { prompt: "選択してください" },
+                      { class: "form-select" } %>
                 </td>
               </tr>
+
+              <!-- Salary Range Selection -->
               <tr>
-                <td class="text-end align-middle pe-2 pb-3">給与</td>
-                <td class="d-flex pb-3">
-                  <%= form.select :min_salary, 
-                        options_for_select([["最低給与", "", { disabled: true, selected: true }]] + [[200_000, 200_000], [300_000, 300_000], [400_000, 400_000]]), 
-                        {}, 
-                        { class: "form-select me-2" } %>
-                  <span class="align-self-center">〜</span>
-                  <%= form.select :max_salary, 
-                        options_for_select([["最高給与", "", { disabled: true, selected: true }]] + [[500_000, 500_000], [600_000, 600_000], [700_000, 700_000]]), 
-                        {}, 
-                        { class: "form-select ms-2" } %>
+                <td class="text-end align-middle pe-2 pb-3">
+                  <%= form.label :min_salary, "最小給与", class: "form-label mb-0" %>
+                </td>
+                <td class="pb-3">
+                  <%= form.number_field :min_salary, value: @min_salary, class: "form-control" %>
+                </td>
+                <td class="text-end align-middle pe-2 pb-3">
+                  <%= form.label :max_salary, "最大給与", class: "form-label mb-0" %>
+                </td>
+                <td class="pb-3">
+                  <%= form.number_field :max_salary, value: @max_salary, class: "form-control" %>
                 </td>
               </tr>
             </tbody>
           </table>
-          <div class="text-start ms-5 ps-2 mt-3">
-            <%= form.submit "検索", class: "btn btn-success btn-lg ms-5" %>
-          </div>
         </div>
 
-        <!-- Second Table (スキル & 通勤地) -->
+        <!-- Right Column: Skills and Location -->
         <div class="col-md-6 pe-5">
           <table class="w-100">
             <tbody>
+              <!-- Skill Selection using Bootstrap Dropdown -->
               <tr>
                 <td class="text-end align-middle pe-2 pb-3">
-                  <%= form.label :skill_id, "スキル", class: "form-label mb-0" %>
+                  <%= form.label :skill_ids, "スキル", class: "form-label mb-0" %>
                 </td>
                 <td class="pb-3">
-                  <%= form.select :skill_id, 
-                        options_for_select(@skills), 
-                        {prompt: "選択してください"}, 
-                        { class: "form-select", id: "skill_select" } %>
-                </td>
+  <div class="dropdown">
+    <!-- Dropdown Button -->
+    <button id="skillsDropdownButton" class="w-100 btn border border-dark dropdown-toggle d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      選択してください
+    </button>
+    <!-- Dropdown Menu with Checkboxes -->
+    <div class="dropdown-menu p-2" aria-labelledby="skillsDropdownButton">
+      <% @skills.each do |skill| %>
+        <div class="form-check">
+          <%= check_box_tag "skill_ids[]", skill.id, @skill_ids.map(&:to_s).include?(skill.id.to_s), class: "form-check-input skill-checkbox", id: "skill_#{skill.id}" %>
+          <%= label_tag "skill_#{skill.id}", skill.title, class: "form-check-label" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</td>
+
               </tr>
+
+              <!-- Location Selection -->
               <tr>
                 <td class="text-end align-middle pe-2 pb-3">
                   <%= form.label :location_id, "通勤地", class: "form-label mb-0" %>
                 </td>
                 <td class="pb-3">
-                  <%= form.select :location_id, 
-                        options_for_select(@locations), 
-                        {prompt: "選択してください"}, 
-                        { class: "form-select"} %>
+                  <%= form.select :location_id,
+                      options_for_select(@locations, @location_id),
+                      { prompt: "選択してください" },
+                      { class: "form-select" } %>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+
+      <!-- Search Button -->
+      <div class="text-start ms-5 ps-2">
+        <%= form.submit "検索", class: "btn btn-success ms-5" %>
+      </div>
     <% end %>
   </div>
 
+  <h1 class="h4 mb-1">
+    <span class="text-success"><%= @total_joboffers_count %></span> ジョプが見つかりました。
+  </h1>
+
   <!-- Loop through the paginated job offers -->
   <% @joboffers.each do |job_offer| %>
-    <div class="mt-2 border border-dark p-3">
+    <div class="border border-dark p-3 mt-3">
       <div class="d-flex justify-content-between">
-        <h1 class="h3 text-start text-success mb-4"><%= job_offer.category.title %></h1>
-        <span class="">Posted <span class="badge bg-success fs-6 p-2 mx-2"><%= time_ago_in_words(job_offer.created_at) %></span> ago</span>
+        <h1 class="h3 text-start text-success mb-2"><%= job_offer.category.title %></h1>
+        <span>
+          Posted <span class="badge bg-success fs-6 p-2 mx-2"><%= time_ago_in_words(job_offer.created_at) %></span> ago
+        </span>
       </div>
-    
-      <div class="w-50">
-        <table class="w-50 text-start">
-          <tr>
-            <th class="p-2">給料</th>
-            <td class="p-2 badge bg-success fs-6 mb-2"><%= "#{job_offer.minsalary}~#{job_offer.maxsalary}" %></td>
-          </tr>
-          <tr>
-            <th>勤務地</th>
-            <td><a href="#" class="text-decoration-none text-secondary btn border-dark"><i class="fa-solid fa-location-dot me-2"></i><%= job_offer.location.city %></a></td>
-          </tr>
-        </table>
-      </div>
-
-      <p class="mt-3 w-75">
-        <%= job_offer.description %>
-      </p>
-
-      <div class="w-50">
-        <table class="w-50 text-start">
-          <tr>
-            <th class="fw-bold p-2">職種</th>
-            <td class="p-2"><%= job_offer.category.title %></td>
-          </tr>
-        </table>
-      </div>
-
-      <div class="mt-2">
-        <% job_offer.t_skills.each do |skill| %>
-          <span class="badge bg-primary me-3 fs-6" style="color:white;"><%= skill.title %></span>
-        <% end %>
-      </div>
+      <p class="mt-2"><%= job_offer.description %></p>
+      <p class="mt-2">Posted by <%= job_offer.company.name %></p>
     </div>
   <% end %>
 
   <!-- Pagination controls -->
-<div class="mt-2 d-flex justify-content-start">
-  <%= paginate @joboffers %>
+  <div class="mt-2 d-flex justify-content-start">
+    <%= paginate @joboffers %>
+  </div>
 </div>
 
-</div>
+<!-- JavaScript to update the dropdown button based on selected skills -->
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Get the dropdown button
+  const button = document.getElementById("skillsDropdownButton");
 
-document.addEventListener("DOMContentLoaded", function () {
-  const skillSelect = document.getElementById("skill_select");
+  // Clear any existing content and create two containers:
+  // Left container for badges and right container for the arrow.
+  button.innerHTML = ""; // Remove previous content
 
-  if (skillSelect) {
-    skillSelect.addEventListener("click", function () {
-      skillSelect.setAttribute("multiple", "true");
+  const leftContainer = document.createElement("div");
+  leftContainer.id = "badgeContainer";
+  leftContainer.textContent = "選択してください"; // Default text
+
+  const rightContainer = document.createElement("span");
+  
+
+  // Apply Bootstrap classes to the button for layout
+  button.classList.add("d-flex", "justify-content-between", "align-items-center");
+
+  // Append containers to the button
+  button.appendChild(leftContainer);
+  button.appendChild(rightContainer);
+
+  // Function to update the badge container based on selected checkboxes.
+  function updateBadgeContainer() {
+    const badgeContainer = document.getElementById("badgeContainer");
+    const checkboxes = document.querySelectorAll(".skill-checkbox");
+    let selected = [];
+
+    // Gather all selected skill labels.
+    checkboxes.forEach(cb => {
+      if (cb.checked) {
+        const label = document.querySelector(`label[for="${cb.id}"]`);
+        if (label) {
+          selected.push({ id: cb.id, text: label.textContent.trim() });
+        }
+      }
     });
+
+    if (selected.length > 0) {
+      // Create badges for each selected skill.
+      badgeContainer.innerHTML = selected.map(skill => {
+        return `<span class="badge bg-primary me-1 p-2 fs-6" data-skill-id="${skill.id}">
+                  ${skill.text} <span class="remove-badge fs-5 ms-3" style="cursor:pointer;">&times;</span>
+                </span>`;
+      }).join("");
+    } else {
+      // Restore default text if no skill is selected.
+      badgeContainer.textContent = "選択してください";
+    }
+  }
+
+  // Listen for checkbox changes to update badges.
+  document.querySelectorAll(".skill-checkbox").forEach(cb => {
+    cb.addEventListener("change", updateBadgeContainer);
+  });
+
+  // Handle badge removal: when a user clicks the remove icon, uncheck the checkbox.
+  button.addEventListener("click", function(e) {
+    if (e.target.classList.contains("remove-badge")) {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent the click from closing the dropdown
+      const badge = e.target.closest(".badge");
+      const skillId = badge.getAttribute("data-skill-id");
+      if (skillId) {
+        const checkbox = document.getElementById(skillId);
+        if (checkbox) {
+          checkbox.checked = false;
+        }
+      }
+      updateBadgeContainer();
+
+      // Re-open the dropdown using Bootstrap's Dropdown API.
+      let dropdownInstance = bootstrap.Dropdown.getInstance(button);
+      if (!dropdownInstance) {
+        dropdownInstance = new bootstrap.Dropdown(button);
+      }
+      dropdownInstance.show();
+    }
+  });
+
+  // Run the update on page load to display any pre-selected skills.
+  updateBadgeContainer();
+
+  // Check for pre-selected skills and open the dropdown if any exist.
+  const preselected = document.querySelectorAll(".skill-checkbox:checked");
+  if (preselected.length > 0) {
+    let dropdownInstance = bootstrap.Dropdown.getInstance(button);
+    if (!dropdownInstance) {
+      dropdownInstance = new bootstrap.Dropdown(button);
+    }
+    dropdownInstance.show();
   }
 });
 </script>

@@ -28,6 +28,12 @@ class MCompaniesController < ApplicationController
   
   def show
     @m_company=MCompany.find(params[:id])
+    @joboffers = @m_company.t_job_offers
+                      .joins(:m_users)    # This joins job offers with m_users; a job offer with multiple m_users yields multiple rows.
+                      .distinct           # Ensures that each job offer appears only once in the result set.
+                      .order(created_at: :desc)
+                      .page(params[:page])
+                      .per(2)
   end
   def edit
     @m_company = MCompany.find(params[:id])

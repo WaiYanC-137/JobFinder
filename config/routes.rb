@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # User Authentication
   resources :m_users
 
+  resources :t_job_offers
 
   # Company Authentication
   resources :m_companies

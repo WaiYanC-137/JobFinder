@@ -24,7 +24,7 @@
         <!-- User Name -->
         <h1 class="text-secondary h5 mb-1 w-25">
         <%= @m_user.name %>
-        <%= link_to edit_m_user_path(current_user), class: "ms-3 fs-4 text-decoration-none" do %>
+        <%= link_to edit_m_user_path(current_user || @m_user), class: "ms-3 fs-4 text-decoration-none" do %>
             <i class="fa-solid fa-pen-to-square text-secondary"></i>
         <% end %>
         </h1>

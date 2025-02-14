@@ -2,7 +2,7 @@ class MCompany < ApplicationRecord
   has_one_attached :logo
   has_secure_password validations: false
   belongs_to :location, class_name: 'TLocation', foreign_key: 'location_id', optional: true
-
+  has_many :t_job_offers, foreign_key: 'company_id'
 
   validates :name, presence: true
   validates :phone, presence: true

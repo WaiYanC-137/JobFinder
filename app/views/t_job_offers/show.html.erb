@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="">
+    <div class="row">
+      <div class="col-8">
+        <h2 class="h3"><%= @job_offer.title %></h2>
+
+        <p><span class="fs-6">職種 : </span> <%= @job_offer.category.title %></p>
+        <p><span class="fs-6">給料 : </span> <%= number_to_currency(@job_offer.minsalary) %> ~ <%= number_to_currency(@job_offer.maxsalary) %></p>
+        <p><span class="fs-6">勤務地 : </span> <%= @job_offer.location.city %></p>
+
+        <p><span class="fs-6">必要なスキル : </span>
+          <% @job_offer.t_skills.each do |skill| %>
+            <span class="bg-primary mr-2 px-2 py-1 rounded" style="color:white;"><%= skill.title %></span>
+          <% end %>
+        </p>
+      </div>
+
+      <div class="col-4">
+        <div class="d-flex flex-column align-items-end">
+          <!-- Here you can add the posted date or time ago -->
+          <p class="fs-5">Posted <%= time_ago_in_words(@job_offer.created_at) %> ago</p>
+
+          <!-- You can add a button here -->
+          <%= link_to 'Apply Now',"#", class: 'btn btn-success' %>
+        </div>
+      </div>
+    </div>
+
+    <h5>仕事内容</h5>
+    <div class="border border-dark p-3">
+      <%= simple_format(@job_offer.description) %>
+    </div>
+
+    <p class="mt-2"><span class="fs-5">投稿 : </span> <%= @job_offer.company.name %></p>
+  </div>
+</div>
