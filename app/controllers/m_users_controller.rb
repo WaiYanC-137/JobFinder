@@ -1,4 +1,4 @@
-class MUsersController < ApplicationController
+class MUsersController < ApplicationController  
   def new
     @m_user = MUser.new
   end
@@ -18,6 +18,8 @@ class MUsersController < ApplicationController
     end
     # Proceed with saving the user if no conflicts
     if @m_user.save
+      UserMailer.registration_email(@m_user).deliver_now 
+      Rails.logger.info "Email sent."
       redirect_to login_path, notice: 'アカウントが作成されました。ログインしてください。' 
     else
       flash.now[:alert] = @m_user.errors.full_messages
@@ -90,7 +92,21 @@ class MUsersController < ApplicationController
       render :edit_password, status: :unprocessable_entity
     end
   end
+  def apply_job_offer
+    @job_offer = TJobOffer.find(params[:job_offer_id])
+    
+    # Check if the current user has already applied to this job offer
+    if current_user.t_job_offers.exists?(@job_offer.id)
+      flash[:alert] = "You have already applied to this job offer."
+    else
+      # Associate the job offer with the user
+      current_user.t_job_offers << @job_offer
+      flash[:notice] = "You have successfully applied to the job offer."
+    end
 
+    redirect_to t_job_offer_path(@job_offer)
+  end
+ 
   private
   def password_params
     params.require(:m_user).permit(:password, :password_confirmation)

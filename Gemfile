@@ -70,8 +70,9 @@ gem 'image_processing', '~> 1.2'
 gem 'kaminari'
 gem 'faker'
 gem 'phony_rails'
+gem 'mailgun-ruby', '~> 1.2'
 
-
+gem 'mail'
 
 
 

@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid pb-5 mb-5">
   <div class="border border-dark pb-3 mb-3">
     <h1 class="h3 p-2 mb-4 px-4" style="background:#F0F0F0;color:black;">求人を検索</h1>
 
@@ -99,17 +99,44 @@
 
   <!-- Loop through the paginated job offers -->
   <% @joboffers.each do |job_offer| %>
-    <div class="border border-dark p-3 mt-3">
-      <div class="d-flex justify-content-between">
-        <h1 class="h3 text-start text-success mb-2"><%= job_offer.category.title %></h1>
-        <span>
-          Posted <span class="badge bg-success fs-6 p-2 mx-2"><%= time_ago_in_words(job_offer.created_at) %></span> ago
-        </span>
+  <div class="border border-dark p-3 mt-3">
+    <!-- Title -->
+    <h1 class="h3 text-success mb-2"><%= job_offer.title %></h1>
+    
+    <!-- Salary Range -->
+    <p>
+      <strong>給料 : </strong>
+      <%= number_to_currency(job_offer.minsalary) %> ~ <%= number_to_currency(job_offer.maxsalary) %>
+    </p>
+    
+    <!-- Location -->
+    <p>
+      <strong>勤務地 : </strong>
+      <span class="p-2 border border-dark rounded ms-2"><i class="fa-solid fa-location-dot me-2"></i><%= job_offer.location.city %></span>
+    </p>
+    
+    <!-- Description -->
+    <p style="width: 75%;">
+      <%= truncate(job_offer.description, length: 100) %>
+    </p>
+    <!-- Skills -->
+    <p>
+      <strong>職種 : </strong>
+      <span class="fs-5 fw-bold"><%=job_offer.category.title%></span>
+      <div class="ms-5"><% job_offer.t_skills.each do |skill| %>
+        <span class="badge bg-primary me-2 p-2 fs-6"><%= skill.title %></span>
+      <% end %>
       </div>
-      <p class="mt-2"><%= job_offer.description %></p>
-      <p class="mt-2">Posted by <%= job_offer.company.name %></p>
+    </p>
+    <% if current_user %>
+    <div class="d-flex justify-content-end">
+           <%= link_to "詳細を表示" ,t_job_offer_path(job_offer.id), class: 'btn btn-warning' %>
     </div>
-  <% end %>
+    <% end %>
+
+  </div>
+<% end %>
+
 
   <!-- Pagination controls -->
   <div class="mt-2 d-flex justify-content-start">

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Welcome to JobFinder, <%= @user.name %>!</h1>
+    <p>
+      Thank you for signing up! You can now log in to your account using the following link:
+    </p>
+    <p>
+      <%= link_to 'Login', @url %>
+    </p>
+  </body>
+</html>
