@@ -67,9 +67,10 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="userProfileDropdown">
                   <li><%= link_to 'プロフィールを見る', m_user_path(current_user.id), class: 'dropdown-item' %></li>
-                  <li><%= link_to 'プロフィール編集', edit_m_user_path(current_user), class: 'dropdown-item' %></li>
-                  <li><%= link_to 'パスワードの編集', "#", class: 'dropdown-item' %></li>
-                  <li><%= link_to 'ログアウト', logout_path, method: :delete, data: { turbo: false }, class: 'dropdown-item' %></li>
+                  <li><%= link_to 'プロフィール編集', edit_m_user_path(current_user.id), class: 'dropdown-item' %></li>
+                  <li><%= link_to 'パスワードの編集', edit_password_user_path, class: 'dropdown-item' %></li>
+                  <%= button_to 'ログアウト', logout_path, method: :delete, data: { turbo: false }, class: 'btn btn-danger dropdown-item' %>
+
                 </ul>
               </li>
             <% elsif current_company.present? %>
@@ -87,8 +88,8 @@
                 <ul class="dropdown-menu" aria-labelledby="userProfileDropdown">
                   <li><%= link_to 'プロフィールを見る', m_company_path(current_company.id), class: 'dropdown-item' %></li>
                   <li><%= link_to 'プロフィール編集', edit_m_company_path(current_company), class: 'dropdown-item' %></li>
-                  <li><%= link_to 'パスワードの編集', "#", class: 'dropdown-item' %></li>
-                  <li><%= link_to 'ログアウト', logout_path, method: :delete, data: { turbo: false }, class: 'dropdown-item' %></li>
+                  <li><%= link_to 'パスワードの編集', edit_password_company_path, class: 'dropdown-item' %></li>
+                  <%= button_to 'ログアウト', logout_path, method: :delete, data: { turbo: false }, class: 'btn btn-danger dropdown-item' %>
                 </ul>
               </li>
             <% end %>

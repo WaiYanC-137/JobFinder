@@ -1,0 +1,52 @@
+<div class="container-fluid w-50">
+<h1>募集書の作成</h1>
+
+<%= form_with model: @job_offer, local: true do |f| %>
+  <div class="mb-3">
+    <%= f.label :title, "タイトル" %>
+    <%= f.text_field :title, class: "form-control", required: true %>
+  </div>
+<div class="d-flex gap-3">
+    <div class="mb-3 w-50">
+        <%= f.label :minsalary, "Minimum Salary" %>
+        <%= f.number_field :minsalary, step: 0.01, class: "form-control", required: true %>
+    </div>
+
+    <div class="mb-3 w-50">
+        <%= f.label :maxsalary, "Maximum Salary" %>
+        <%= f.number_field :maxsalary, step: 0.01, class: "form-control", required: true %>
+    </div>
+</div>  <!-- ✅ Correctly closed the d-flex div -->
+
+
+  <div class="mb-3">
+    <%= f.label :location_id, "Location" %>
+    <%= f.select :location_id, options_for_select(@locations), { prompt: "Select a location" }, class: "form-select", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :category_id, "職種" %>
+    <%= f.select :category_id, options_for_select(@categories), { prompt: "Select a category" }, class: "form-select", required: true %>
+  </div>
+    <div class="mb-2">
+  <%= f.label :t_skill_ids, "スキル", class: "form-label mb-0" %>
+  <%= f.select :t_skill_ids, 
+      options_for_select(@skills.map { |skill| [skill.title, skill.id] }, @job_offer.t_skills.pluck(:id)), 
+      { prompt: "選択してください",multiple: true }, 
+      { class: "form-select", id: "skill_select" } %>
+</div>
+
+
+  <div class="mb-3">
+    <%= f.label :description, "Job Description" %>
+    <%= f.text_area :description, class: "form-control", rows: 3, required: true %>
+  </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <%= f.submit "変更", class: "btn btn-warning" %>
+    <%= link_to "Back", t_job_offers_path, class: "btn btn-secondary" %>
+  </div>
+  
+<% end %>
+
+
+</div>

@@ -76,9 +76,29 @@ class MCompaniesController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-  
-  private
+  def edit_password
+    @company = current_company
+  end
+  def update_password
+    @company = current_company
+    # Validate current password
+    if @company.authenticate(params[:m_company][:current_password])
+      if @company.update(password_params)
+        flash[:success] = "Password updated successfully."
+        redirect_to m_company_path(@company)  # Adjust to your profile or desired page
+      else
+        render :edit_password, status: :unprocessable_entity
+      end
+    else
+      @company.errors.add(:current_password, "is incorrect")
+      render :edit_password, status: :unprocessable_entity
+    end
+  end
 
+  private
+  def password_params
+    params.require(:m_company).permit(:password, :password_confirmation)
+  end
   def m_company_params
     params.require(:m_company).permit(:name, :email, :phone, :password, :password_confirmation, :location_id, :info, :address, :logo)
   end

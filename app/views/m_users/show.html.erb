@@ -63,7 +63,7 @@
       <p class="mb-3"><%= link_to job_offer.category.title, t_job_offer_path(job_offer.id) , class: "text-decoration-none" %>
       <!-- You can add more fields as needed, e.g., salary, location, etc. -->
   <% end %>
-  <div class="pagination d-flex justify-content-end mt-3">
+  <div class="pagination d-flex justify-content-end mt-1">
       <%= paginate @joboffers %>
   </div>
 </div>

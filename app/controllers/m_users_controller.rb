@@ -72,9 +72,29 @@ class MUsersController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-  
-  private
+  def edit_password_user
+    @user = current_company
+  end
+  def update_password
+    @user = current_company
+    # Validate current password
+    if @user.authenticate(params[:m_user][:current_password])
+      if @user.update(password_params)
+        flash[:success] = "Password updated successfully."
+        redirect_to m_user_path(@user)  # Adjust to your profile or desired page
+      else
+        render :edit_password, status: :unprocessable_entity
+      end
+    else
+      @user.errors.add(:current_password, "is incorrect")
+      render :edit_password, status: :unprocessable_entity
+    end
+  end
 
+  private
+  def password_params
+    params.require(:m_user).permit(:password, :password_confirmation)
+  end
   def m_user_params
     params.require(:m_user).permit(:name, :email, :password, :password_confirmation, :about, :phone, :category_id, :location_id, :profile_picture, t_skill_ids: [])
   end
