@@ -1,4 +1,4 @@
-<div class="container-fluid pb-5 mb-5">
+<div class="container-fluid">
   <div class="border border-dark pb-3 mb-3">
     <h1 class="h3 p-2 mb-4 px-4" style="background:#F0F0F0;color:black;">求人を検索</h1>
 
@@ -13,7 +13,7 @@
                 <td class="text-end align-middle pe-2 pb-3">
                   <%= form.label :category_id, "職種", class: "form-label mb-0" %>
                 </td>
-                <td class="pb-3" colspan="3">
+                <td class="pb-3" colspan="4">
                   <%= form.select :category_id,
                       options_for_select(@categories, @category_id),
                       { prompt: "選択してください" },
@@ -23,19 +23,28 @@
 
               <!-- Salary Range Selection -->
               <tr>
-                <td class="text-end align-middle pe-2 pb-3">
-                  <%= form.label :min_salary, "最小給与", class: "form-label mb-0" %>
-                </td>
-                <td class="pb-3">
-                  <%= form.number_field :min_salary, value: @min_salary, class: "form-control" %>
-                </td>
-                <td class="text-end align-middle pe-2 pb-3">
-                  <%= form.label :max_salary, "最大給与", class: "form-label mb-0" %>
-                </td>
-                <td class="pb-3">
-                  <%= form.number_field :max_salary, value: @max_salary, class: "form-control" %>
-                </td>
-              </tr>
+  <td class="text-end align-middle pe-2 pb-3">
+    <%= form.label :min_salary, "最小給与", class: "form-label mb-0" %>
+  </td>
+  <td class="pb-3">
+    <%= select_tag :min_salary, 
+                   options_for_select([['選択してください', '']] + [100000, 200000, 300000, 400000].map { |value| [number_with_delimiter(value), value] }, selected: @min_salary),
+                   class: "form-select form-control-lg rounded-3" %>
+  </td>
+  <td class="text-end align-end pe-2 pb-3">
+    <span class="mx-2 text-end">~</span> <!-- Add ~ between the two select boxes -->
+  </td>
+  <td class="text-end align-middle pe-2 pb-3">
+    <%= form.label :max_salary, "最高給与", class: "form-label mb-0" %>
+  </td>
+  <td class="pb-3">
+    <%= select_tag :max_salary, 
+                   options_for_select([['選択してください', '']] + [500000, 600000, 700000, 800000].map { |value| [number_with_delimiter(value), value] }, selected: @max_salary),
+                   class: "form-select form-control-lg rounded-3" %>
+  </td>
+</tr>
+
+
             </tbody>
           </table>
         </div>
