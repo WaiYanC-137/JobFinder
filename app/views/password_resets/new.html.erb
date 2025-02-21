@@ -1,0 +1,7 @@
+<h2>Forgot Your Password?</h2>
+
+<%= form_with url: passwordreset_path, method: :post do %>
+  <label>Email:</label>
+  <%= email_field_tag :email, nil, required: true %>
+  <%= submit_tag "Send Reset Email" %>
+<% end %>

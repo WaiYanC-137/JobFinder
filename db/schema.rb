@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_14_084413) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_21_073929) do
   create_table "active_storage_attachments", charset: "utf8", collation: "utf8_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -73,6 +73,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_14_084413) do
     t.string "profile_picture"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "reset_digest"
+    t.datetime "reset_sent_at"
     t.index ["category_id"], name: "index_m_users_on_category_id"
     t.index ["location_id"], name: "index_m_users_on_location_id"
   end
@@ -142,7 +144,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_14_084413) do
   add_foreign_key "m_users", "t_locations", column: "location_id"
   add_foreign_key "m_users_t_job_offers", "m_users"
   add_foreign_key "m_users_t_job_offers", "t_job_offers"
-  add_foreign_key "m_users_t_skills", "m_users"
+  add_foreign_key "m_users_t_skills", "m_users", on_delete: :cascade
   add_foreign_key "m_users_t_skills", "t_skills"
   add_foreign_key "t_job_offers", "m_companies", column: "company_id"
   add_foreign_key "t_job_offers", "t_categories", column: "category_id"

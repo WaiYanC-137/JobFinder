@@ -91,4 +91,7 @@ class HomeController < ApplicationController
     @min_salary = min_salary
     @max_salary = max_salary
   end
+  def resetpassword
+
+  end
 end

@@ -1,8 +1,7 @@
-# config/environments/development.rb
-
 Rails.application.configure do
   # Basic configuration for development environment
-
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.active_storage.service = :local
   # Enable full error reports and disable caching
   config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
@@ -19,6 +18,8 @@ Rails.application.configure do
     enable_starttls_auto: true,
     openssl_verify_mode:  'none'
   }
-
+  
+  
+  
   # Other necessary development configurations
 end

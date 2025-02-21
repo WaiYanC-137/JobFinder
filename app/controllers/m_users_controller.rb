@@ -75,10 +75,10 @@ class MUsersController < ApplicationController
     end
   end
   def edit_password_user
-    @user = current_company
+    @user = current_user
   end
   def update_password
-    @user = current_company
+    @user = current_user
     # Validate current password
     if @user.authenticate(params[:m_user][:current_password])
       if @user.update(password_params)
