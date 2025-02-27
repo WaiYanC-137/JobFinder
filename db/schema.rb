@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_21_073929) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_27_034058) do
   create_table "active_storage_attachments", charset: "utf8", collation: "utf8_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -50,6 +50,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_21_073929) do
     t.string "logo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "reset_digest"
+    t.datetime "reset_sent_at"
     t.index ["location_id"], name: "index_m_companies_on_location_id"
   end
 
@@ -75,6 +77,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_21_073929) do
     t.datetime "updated_at", null: false
     t.string "reset_digest"
     t.datetime "reset_sent_at"
+    t.string "remember_digest"
     t.index ["category_id"], name: "index_m_users_on_category_id"
     t.index ["location_id"], name: "index_m_users_on_location_id"
   end
