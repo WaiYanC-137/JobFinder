@@ -1,85 +1,90 @@
-<style>
-.fa-briefcase{
-  font-size:100px;
-}
-.custom-color{
-  background:#8EB4E3;
-}
-.hover:hover{
-  background:#8EB4E3;
-}
-.input-group{
-  width:90%;
-  flex-wrap:nowrap;
-}
-.field_with_errors{
-  width: 100%; /* Ensure the error wrapper is 100% wide */
-}
+<% if current_entity.nil? %> <!-- Check if no user or company is logged in -->
+  <style>
+    .fa-briefcase {
+      font-size: 100px;
+    }
+    .custom-color {
+      background: #8EB4E3;
+    }
+    .hover:hover {
+      background: #8EB4E3;
+    }
+    .input-group {
+      width: 90%;
+      flex-wrap: nowrap;
+    }
+    .field_with_errors {
+      width: 100%; /* Ensure the error wrapper is 100% wide */
+    }
+  </style>
 
-</style>
-<div class="container-fluid">
-  <div class="row d-flex justify-content-center">
-    <div class="col-7">
-      <div class="h3 my-4 fw-bold">ユーザーアカウントの作成</div>
+  <div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+      <div class="col-7">
+        <div class="h3 my-4 fw-bold">ユーザーアカウントの作成</div>
+      </div>
+      <div class="col-3"></div>
     </div>
-    <div class="col-3">
+
+    <div class="row g-0 d-flex justify-content-center align-items-stretch">
+      <div class="col-7 border border-dark">
+        <div class="px-5 py-4">
+          <%= form_with model: @m_user, url: m_users_path, local: true do |form| %>
+            <div class="mb-3">
+              <%= form.label :name, "ユーザー名<span class='fs-4 text-danger'>*</span>".html_safe, class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                <%= form.text_field :name, class: "form-control ps-3", placeholder: "ユーザー名を入力してください" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :email, "メールアドレス<span class='fs-4 text-danger'>*</span>".html_safe, class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <%= form.text_field :email, class: "form-control ps-3", placeholder: "メールアドレスを入力してください" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :password, "パスワード<span class='fs-4 text-danger'>*</span>".html_safe, class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <%= form.password_field :password, class: "form-control ps-3", placeholder: "パスワードを入力してください" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :password_confirmation, "パスワードの確認<span class='fs-4 text-danger'>*</span>".html_safe, class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <%= form.password_field :password_confirmation, class: "form-control ps-3", placeholder: "確認パスワードを入力してください" %>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4" style="width:90%">
+              <%= form.submit "登録", class: "btn btn-lg custom-color hover w-25 fw-bold" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="d-flex flex-column justify-content-center align-items-center h-100 custom-color">
+          <h1 class="h1"><i class="fa-solid fa-briefcase"></i></h1>
+          <span class="fs-3" style="color:white;">ようこそ</span>
+        </div>
+      </div>
+    </div> 
+
+    <div class="row d-flex justify-content-center mt-3">
+      <div class="col-7">
+        <h5 class="h6">採用をお探しですか？<a href="<%= new_m_company_path %>" class="text-decoration-none">会社登録</a></h5>
+      </div>
+      <div class="col-3"></div>
     </div>
   </div>
-  <div class="row g-0 d-flex justify-content-center align-items-stretch">
-    <div class="col-7 border border-dark">
-      <div class="px-5 py-4">
-        <%= form_with model: @m_user, url: m_users_path, local: true do |form| %>
-          <div class="mb-3">
-            <%= form.label :name, "ユーザー名<span class='fs-4 text-danger'>*</span>".html_safe, class: "form-label" %>
-            <div class="input-group">
-              <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-              <%= form.text_field :name, class: "form-control ps-3", placeholder: "ユーザー名を入力してください" %>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <%= form.label :email, "メールアドレス<span class='fs-4 text-danger'>*</span>".html_safe, class: "form-label" %>
-            <div class="input-group">
-              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-              <%= form.text_field :email, class: "form-control ps-3", placeholder: "メールアドレスを入力してください" %>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <%= form.label :password, "パスワード<span class='fs-4 text-danger'>*</span>".html_safe, class: "form-label" %>
-            <div class="input-group">
-              <span class="input-group-text"><i class="fas fa-lock"></i></span>
-              <%= form.password_field :password, class: "form-control ps-3", placeholder: "パスワードを入力してください" %>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <%= form.label :password_confirmation, "パスワードの確認<span class='fs-4 text-danger'>*</span>".html_safe, class: "form-label" %>
-            <div class="input-group">
-              <span class="input-group-text"><i class="fas fa-lock"></i></span>
-              <%= form.password_field :password_confirmation, class: "form-control ps-3", placeholder: "確認パスワードを入力してください" %>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-end mt-4" style="width:90%">
-            <%= form.submit "登録", class: "btn btn-lg custom-color hover w-25 fw-bold" %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-    <div class=col-3>
-      <div class="d-flex flex-column justify-content-center align-items-center h-100 custom-color">
-        <h1 class="h1"><i class="fa-solid fa-briefcase"></i></h1>
-        <span class="fs-3" style="color:white;">ようこそ</span>
-      </div>
-    </div>
-  </div> 
-  <div class="row d-flex justify-content-center mt-3">
-    <div class="col-7">
-      <h5 class="h6">採用をお探しですか？<a href="<%= new_m_company_path %>" class="text-decoration-none">会社登録</a></h5>
-    </div>
-    <div class="col-3">
-    </div>
+<% else %> <!-- If the user or company is already logged in, redirect or show a message -->
+  <div class="container">
+    <p>すでにログインしています。<a href="<%= root_path %>">ホームページへ戻る</a></p>
   </div>
-</div>
-
+<% end %>

@@ -19,6 +19,7 @@ class MCompaniesController < ApplicationController
   
     # Proceed with saving the company if no conflicts
     if @m_company.save
+      UserMailer.registration_email(@m_company).deliver_now
       redirect_to login_path, notice: 'アカウントが作成されました。ログインしてください。'
     else
       flash.now[:alert] = @m_company.errors.full_messages

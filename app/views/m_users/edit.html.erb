@@ -32,13 +32,23 @@
                             { class: "form-select" } %>
           </div>
 
-          <!-- Skills -->
+          <!-- Skills Dropdown -->
           <div class="mb-2">
-            <%= form.label :t_skill_ids, "スキル", class: "form-label mb-0" %>
-            <%= form.select :t_skill_ids, 
-                            options_for_select(@skills.map { |skill| [skill.title, skill.id] }, @m_user.t_skills.pluck(:id)), 
-                            { prompt: "選択してください", multiple: true}, 
-                            { class: "form-select", id: "skill_select" } %>
+            <label class="form-label mb-0">スキル</label>
+            <div class="dropdown">
+              <button id="skillsDropdownButton" class="w-100 btn border border-dark dropdown-toggle d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span id="badgeContainer">選択してください</span>
+              </button>
+
+              <ul class="dropdown-menu p-2" aria-labelledby="skillsDropdownButton">
+                <% @skills.each do |skill| %>
+                  <li class="form-check">
+                    <%= check_box_tag "m_user[t_skill_ids][]", skill.id, @m_user.t_skills.map(&:id).include?(skill.id), class: "form-check-input skill-checkbox", id: "skill_#{skill.id}", data: { skill_name: skill.title } %>
+                    <%= label_tag "skill_#{skill.id}", skill.title, class: "form-check-label" %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
           </div>
 
           <!-- Self-Introduction -->
@@ -55,7 +65,7 @@
                             { prompt: '選択してください' }, class: "form-select" %>
           </div>
 
-          <!-- Profile Image Display -->
+          <!-- Profile Image -->
           <div class="mb-3 d-flex flex-column justify-content-center">
             <%= form.label :profile_picture, "プロフィール画像", class: "form-label mb-0" %>
             <% if @m_user.profile_picture.attached? %>
@@ -64,7 +74,6 @@
               <%= image_tag "default_profile.png", id: "profile-picture-preview", class: "img-thumbnail rounded mb-3", style: "width: 150px; height: 150px; object-fit: cover;" %>
             <% end %>
 
-            <!-- File Upload -->
             <%= form.file_field :profile_picture, class: "form-control", direct_upload: true, id: "m_user_profile_picture" %>
           </div>
 
@@ -80,21 +89,82 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const fileInput = document.querySelector('#m_user_profile_picture');  // Target the file input
-    const previewImage = document.querySelector('#profile-picture-preview');  // Target the image preview element
+  const fileInput = document.querySelector('#m_user_profile_picture');
+  const previewImage = document.querySelector('#profile-picture-preview');
 
-    fileInput.addEventListener('change', function (event) {
-      const file = event.target.files[0];  // Get the selected file
+  fileInput.addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        previewImage.src = e.target.result;
+        previewImage.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          previewImage.src = e.target.result;  // Set the src to the preview
-          previewImage.style.display = 'block';  // Display the preview image
-        };
-        reader.readAsDataURL(file);  // Read the file as a DataURL
+  // Skill Selection Logic
+  const button = document.getElementById("skillsDropdownButton");
+  button.innerHTML = ""; // Clear previous content
+
+  const leftContainer = document.createElement("div");
+  leftContainer.id = "badgeContainer";
+  leftContainer.textContent = "選択してください"; // Default text
+
+  const rightContainer = document.createElement("span");
+
+  button.classList.add("d-flex", "justify-content-between", "align-items-center");
+  button.appendChild(leftContainer);
+  button.appendChild(rightContainer);
+
+  function updateBadgeContainer() {
+    const badgeContainer = document.getElementById("badgeContainer");
+    const checkboxes = document.querySelectorAll(".skill-checkbox");
+    let selected = [];
+
+    checkboxes.forEach(cb => {
+      if (cb.checked) {
+        const label = document.querySelector(`label[for="${cb.id}"]`);
+        if (label) {
+          selected.push({ id: cb.id, text: label.textContent.trim() });
+        }
       }
     });
-  });
-</script>
 
+    if (selected.length > 0) {
+      badgeContainer.innerHTML = selected.map(skill => {
+        return `
+          <span class="badge bg-primary me-1 p-2">
+            ${skill.text} 
+            <span class="ms-1 text-white fw-bold remove-skill" data-skill-id="${skill.id}" style="cursor:pointer;">×</span>
+          </span>
+        `;
+      }).join(" ");
+    } else {
+      badgeContainer.textContent = "選択してください";
+    }
+
+    // Add event listeners to remove skill when clicking "×"
+    document.querySelectorAll(".remove-skill").forEach(btn => {
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation(); // Prevent the dropdown from closing
+        const skillId = this.getAttribute("data-skill-id");
+        const checkbox = document.getElementById(skillId);
+        if (checkbox) {
+          checkbox.checked = false; // Uncheck the checkbox
+        }
+        updateBadgeContainer(); // Refresh the displayed badges
+      });
+    });
+  }
+
+  // Listen for changes in checkboxes
+  document.querySelectorAll(".skill-checkbox").forEach(cb => {
+    cb.addEventListener("change", updateBadgeContainer);
+  });
+
+  updateBadgeContainer();
+});
+
+</script>
