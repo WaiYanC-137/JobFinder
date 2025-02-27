@@ -1,4 +1,7 @@
-class MUsersController < ApplicationController  
+class MUsersController < ApplicationController
+  # Ensure that user is authenticated for edit, update, and show actions
+  before_action :authenticate_user!, only: [:edit, :update, :show, :edit_password_user, :update_password]
+
   def new
     @m_user = MUser.new
   end
@@ -6,7 +9,7 @@ class MUsersController < ApplicationController
   def create
     @m_user = MUser.new(m_user_params)
 
-    # Check if the email already exists in the MCompany table and Musers tabel
+    # Check if the email already exists in the MCompany table and MUser table
     if MCompany.exists?(email: m_user_params[:email])
       flash.now[:alert] = "このメールアドレスはすでに会社アカウントとして使用されています。"
       render :new, status: :unprocessable_entity
@@ -16,6 +19,7 @@ class MUsersController < ApplicationController
       render :new, status: :unprocessable_entity
       return
     end
+
     # Proceed with saving the user if no conflicts
     if @m_user.save
       UserMailer.registration_email(@m_user).deliver_now 
@@ -30,9 +34,7 @@ class MUsersController < ApplicationController
   def show
     @m_user = MUser.find(params[:id])
     @joboffers = @m_user.t_job_offers.order(created_at: :desc).page(params[:page]).per(2)
-
   end
-
 
   def edit
     @m_user = MUser.find(params[:id])
@@ -74,9 +76,11 @@ class MUsersController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
+
   def edit_password_user
     @user = current_user
   end
+
   def update_password
     @user = current_user
     # Validate current password
@@ -92,6 +96,7 @@ class MUsersController < ApplicationController
       render :edit_password, status: :unprocessable_entity
     end
   end
+
   def apply_job_offer
     @job_offer = TJobOffer.find(params[:job_offer_id])
     
@@ -106,13 +111,20 @@ class MUsersController < ApplicationController
 
     redirect_to t_job_offer_path(@job_offer)
   end
- 
+
   private
   def password_params
     params.require(:m_user).permit(:password, :password_confirmation)
   end
+
   def m_user_params
     params.require(:m_user).permit(:name, :email, :password, :password_confirmation, :about, :phone, :category_id, :location_id, :profile_picture, t_skill_ids: [])
   end
   
+  def authenticate_user!
+    # If the user is not logged in, redirect to the login page
+    unless current_user
+      redirect_to login_path, alert: "ログインしてください"
+    end
+  end
 end

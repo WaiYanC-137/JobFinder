@@ -1,66 +1,64 @@
 class MCompaniesController < ApplicationController
+  before_action :authenticate_company!, only: [:new, :create, :edit, :update, :edit_password, :update_password, :show]
+
   def new
     @m_company = MCompany.new
   end
 
   def create
     @m_company = MCompany.new(m_company_params)
-  
+
     # Check if the email already exists in the MUser or MCompany table
     if MUser.exists?(email: @m_company.email)
       flash.now[:alert] = "このメールアドレスはすでにユーザーアカウントとして使用されています。"
       render :new, status: :unprocessable_entity and return
-      return
     elsif MCompany.exists?(email: @m_company.email)
       flash.now[:alert] = "このメールアドレスはすでに会社アカウントとして使用されています。"
       render :new, status: :unprocessable_entity and return
-      return
     end
-  
+
     # Proceed with saving the company if no conflicts
     if @m_company.save
       UserMailer.registration_email(@m_company).deliver_now
       redirect_to login_path, notice: 'アカウントが作成されました。ログインしてください。'
     else
       flash.now[:alert] = @m_company.errors.full_messages
-      render :new, status: :unprocessable_entity and return
+      render :new, status: :unprocessable_entity
     end
   end
-  
+
   def show
-    @m_company=MCompany.find(params[:id])
+    @m_company = MCompany.find(params[:id])
     @joboffers = @m_company.t_job_offers
-                      .joins(:m_users)    # This joins job offers with m_users; a job offer with multiple m_users yields multiple rows.
-                      .distinct           # Ensures that each job offer appears only once in the result set.
-                      .order(created_at: :desc)
-                      .page(params[:page])
-                      .per(2)
+                           .joins(:m_users)
+                           .distinct
+                           .order(created_at: :desc)
+                           .page(params[:page])
+                           .per(2)
   end
+
   def edit
     @m_company = MCompany.find(params[:id])
   end
 
   def update
     @m_company = MCompany.find(params[:id])
-  
+
     # Check if the email already exists in the MUser table and not for the current company
     if MUser.exists?(email: m_company_params[:email])
       flash.now[:alert] = "このメールアドレスはすでにユーザーアカウントとして使用されています。"
-      render :edit, status: :unprocessable_entity
-      return
-    # Check if the email already exists in the MCompany table but exclude the current company's email
+      render :edit, status: :unprocessable_entity and return
     elsif MCompany.exists?(email: m_company_params[:email]) && m_company_params[:email] != @m_company.email
       flash.now[:alert] = "このメールアドレスはすでに会社アカウントとして使用されています。"
-      render :edit, status: :unprocessable_entity
-      return
+      render :edit, status: :unprocessable_entity and return
     end
-  
+
     # Update fields excluding password (unless provided)
     if m_company_params[:password].present?
       @m_company.password = m_company_params[:password]
       @m_company.password_confirmation = m_company_params[:password_confirmation] if m_company_params[:password_confirmation].present?
     end
-  
+
     # Proceed with updating company attributes
     if @m_company.update(
         name: m_company_params[:name],
@@ -70,16 +68,18 @@ class MCompaniesController < ApplicationController
         info: m_company_params[:info],
         logo: m_company_params[:logo]
       )
-  
+
       redirect_to m_company_path(@m_company), notice: '企業情報が更新されました。'
     else
       flash.now[:alert] = "更新に失敗しました。" + @m_company.errors.full_messages.join(", ")
       render :edit, status: :unprocessable_entity
     end
   end
+
   def edit_password
     @company = current_company
   end
+
   def update_password
     @company = current_company
     # Validate current password
@@ -97,9 +97,19 @@ class MCompaniesController < ApplicationController
   end
 
   private
+
+  # Check if the company is logged in
+  def authenticate_company!
+    unless current_company
+      flash[:alert] = 'ログインしてください。'
+      redirect_to login_path # Redirect to login if the company is not logged in
+    end
+  end
+
   def password_params
     params.require(:m_company).permit(:password, :password_confirmation)
   end
+
   def m_company_params
     params.require(:m_company).permit(:name, :email, :phone, :password, :password_confirmation, :location_id, :info, :address, :logo)
   end
