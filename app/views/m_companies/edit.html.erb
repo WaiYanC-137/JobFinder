@@ -29,7 +29,6 @@
             <%= form.select :location_id, TLocation.pluck(:city, :id), { prompt: '選択してください' }, class: "form-select" %>
           </div>
 
-
           <!-- Address (住所) -->
           <div class="mb-2">
             <%= form.label :address, "住所", class: "form-label mb-0" %>
@@ -39,22 +38,22 @@
           <!-- About the Company -->
           <div class="mb-2">
             <%= form.label :info, "企業について", class: "form-label mb-0" %>
-            <%= form.text_area :info, class: "form-control", rows: 1 %>
+            <%= form.text_area :info, class: "form-control", rows: 3 %>
           </div>
 
           <!-- Company Logo Display -->
-          <!-- Company Logo Display -->
+          <div class="mb-3 text-center d-flex flex-column justify-content-center align-items-start">
+          <%= form.label :logo, "ロゴ画像", class: "form-label mb-2" %>
             <% if @m_company.persisted? && @m_company.logo.attached? %>
-                <%= image_tag @m_company.logo, class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+              <%= image_tag @m_company.logo, id: "logo-preview", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
             <% else %>
-                <%= image_tag "default_profile.png", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
+              <%= image_tag "default_profile.png", id: "logo-preview", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
             <% end %>
-
+          </div>
 
           <!-- Logo Upload -->
-          <div class="mb-3">
-            <%= form.label :logo, "ロゴ画像", class: "form-label mb-0" %>
-            <%= form.file_field :logo, class: "form-control", direct_upload: true %>
+          <div class="mb-3 ">
+            <%= form.file_field :logo, class: "form-control", direct_upload: true, id: "logo-upload" %>
           </div>
 
           <!-- Submit Button -->
@@ -67,3 +66,22 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.querySelector('#logo-upload');
+    const previewImage = document.querySelector('#logo-preview');
+
+    fileInput.addEventListener('change', function (event) {
+      const file = event.target.files[0];  // Get the selected file
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImage.src = e.target.result;  // Set the src to the preview
+        };
+        reader.readAsDataURL(file);  // Read the file as a DataURL
+      }
+    });
+  });
+</script>

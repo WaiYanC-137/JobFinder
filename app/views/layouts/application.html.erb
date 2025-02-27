@@ -105,12 +105,12 @@
           <% # Ensure messages is an array, otherwise just display the string directly %>
           <% if messages.is_a?(Array) %>
             <% messages.each do |message| %>
-              <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success" %>">
+              <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success fade-message" %>">
                 <%= message %>
               </li>
             <% end %>
           <% else %>
-            <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success" %>">
+            <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success fade-message" %>">
               <%= messages %>
             </li>
           <% end %>
@@ -135,3 +135,19 @@
 
   </body>
 </html>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Wait 2 seconds before fading out success messages
+    setTimeout(function() {
+      const successMessages = document.querySelectorAll(".fade-message");
+
+      successMessages.forEach(function(msg) {
+        msg.style.transition = "opacity 0.5s ease-out";
+        msg.style.opacity = "0";
+
+        // Remove the message from the DOM after fading out
+        setTimeout(() => msg.remove(), 500); // Remove after fade-out
+      });
+    }, 2000); // Wait 2 seconds
+  });
+</script>
