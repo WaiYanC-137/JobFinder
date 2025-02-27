@@ -27,7 +27,7 @@ class SessionsController < ApplicationController
         forget(@company)
       end
       redirect_to userlist_path, notice: "Logged in as company."
-
+    
     # If email or password is incorrect
     else
       flash.now[:alert] = "Email or password is incorrect."
@@ -43,14 +43,6 @@ class SessionsController < ApplicationController
   end
 
   private
-
-  def log_in(entity)
-    if entity.is_a?(MUser)
-      session[:user_id] = entity.id
-    elsif entity.is_a?(MCompany)
-      session[:company_id] = entity.id
-    end
-  end
 
   def remember(entity)
     entity.remember
@@ -74,25 +66,5 @@ class SessionsController < ApplicationController
     session.delete(:user_id)
     session.delete(:company_id)
     @current_entity = nil
-  end
-
-  def current_entity
-    if session[:user_id]
-      @current_entity = MUser.find_by(id: session[:user_id])
-    elsif session[:company_id]
-      @current_entity = MCompany.find_by(id: session[:company_id])
-    elsif cookies.signed[:user_id]
-      entity = MUser.find_by(id: cookies.signed[:user_id])
-      if entity && entity.authenticated?(cookies[:remember_token])
-        log_in(entity)
-        @current_entity = entity
-      end
-    elsif cookies.signed[:company_id]
-      entity = MCompany.find_by(id: cookies.signed[:company_id])
-      if entity && entity.authenticated?(cookies[:remember_token])
-        log_in(entity)
-        @current_entity = entity
-      end
-    end
   end
 end

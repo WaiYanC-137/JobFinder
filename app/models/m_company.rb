@@ -1,4 +1,5 @@
 class MCompany < ApplicationRecord
+  attr_accessor :remember_token
   has_one_attached :logo
   has_secure_password validations: false
   belongs_to :location, class_name: 'TLocation', foreign_key: 'location_id', optional: true
@@ -23,6 +24,23 @@ class MCompany < ApplicationRecord
   validates :password_confirmation, length: { minimum: 6, message: :too_short }, if: -> { password_confirmation.present? }
   validates :password, confirmation: { message: :mismatch }, if: -> { password.present? && password_confirmation.present? }
 
+  def remember
+    self.remember_token = SecureRandom.urlsafe_base64
+    update(remember_digest: BCrypt::Password.create(remember_token))
+  end
+
+  # Verifies if a given token matches the stored digest
+  def authenticated?(remember_token)
+    return false if remember_digest.nil?
+    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  end
+
+  # Clears the remember token
+  def forget
+    update(remember_digest: nil)
+  end
+
+
   private
 
   def phone_format
@@ -44,6 +62,7 @@ class MCompany < ApplicationRecord
     end
   end
   
+  # Generates a token and stores its hash in the database
   
   
 end
