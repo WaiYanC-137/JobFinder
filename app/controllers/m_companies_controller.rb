@@ -1,5 +1,5 @@
 class MCompaniesController < ApplicationController
-  before_action :authenticate_company!, only: [:new, :create, :edit, :update, :edit_password, :update_password, :show]
+  before_action :authenticate_company!, only: [  :edit, :update, :edit_password, :update_password]
 
   def new
     @m_company = MCompany.new

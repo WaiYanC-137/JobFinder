@@ -1,6 +1,6 @@
 class MUsersController < ApplicationController
   # Ensure that user is authenticated for edit, update, and show actions
-  before_action :authenticate_user!, only: [:edit, :update, :show, :edit_password_user, :update_password]
+  before_action :authenticate_user!, only: [:edit, :update, :edit_password_user, :update_password]
 
   def new
     @m_user = MUser.new
@@ -37,14 +37,20 @@ class MUsersController < ApplicationController
   end
 
   def edit
+    puts "##Editttt"
     @m_user = MUser.find(params[:id])
     @categories = TCategory.all 
     @skills = TSkill.all       
     @locations = TLocation.all
+    puts @m_user.inspect
+    puts "edit cagteogry #{@categories.inspect}"
   end
 
   def update
     @m_user = MUser.find(params[:id])
+    @categories = TCategory.all 
+    @skills = TSkill.all       
+    @locations = TLocation.all
   
     # Check if the email already exists in MCompany and MUser (excluding current user's email)
     if MCompany.exists?(email: m_user_params[:email])
@@ -57,18 +63,21 @@ class MUsersController < ApplicationController
       return
     end
   
-    # Attach the new profile picture if it's provided
+    # Validate profile picture format if provided
     if params[:m_user][:profile_picture].present?
-      @m_user.profile_picture.attach(params[:m_user][:profile_picture])
+      unless valid_image_format?(params[:m_user][:profile_picture])
+        flash.now[:alert] = "プロフィール画像は JPG または JPEG 形式のみ対応しています。"
+        render :edit, status: :unprocessable_entity
+        return
+      end
     end
   
-    # Update user attributes, including the new profile picture (if attached)
+    # Update user attributes
     if @m_user.update(m_user_params)
-      # Handle updating skills
       if m_user_params[:t_skill_ids].present?
-        @m_user.t_skills = TSkill.where(id: m_user_params[:t_skill_ids]) # Replaces existing skills
+        @m_user.t_skills = TSkill.where(id: m_user_params[:t_skill_ids])
       else
-        @m_user.t_skills.clear # Removes all skills if no skill_ids are provided
+        @m_user.t_skills.clear
       end
       redirect_to m_user_path(@m_user), notice: 'ユーザー情報が更新されました。'
     else
@@ -76,6 +85,8 @@ class MUsersController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
+  
+  
 
   def edit_password_user
     @user = current_user
@@ -115,6 +126,11 @@ class MUsersController < ApplicationController
   private
   def password_params
     params.require(:m_user).permit(:password, :password_confirmation)
+  end
+
+  def valid_image_format?(file)
+    allowed_types = ["image/jpeg", "image/jpg"]
+    allowed_types.include?(file.content_type)
   end
 
   def m_user_params
