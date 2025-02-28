@@ -24,7 +24,7 @@ class MUsersController < ApplicationController
     if @m_user.save
       UserMailer.registration_email(@m_user).deliver_now 
       Rails.logger.info "Email sent."
-      redirect_to login_path, notice: 'アカウントが作成されました。ログインしてください。' 
+      redirect_to new_m_user_path, notice: 'アカウントが作成されました。ログインしてください。' 
     else
       flash.now[:alert] = @m_user.errors.full_messages
       render :new, status: :unprocessable_entity

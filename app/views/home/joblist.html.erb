@@ -1,4 +1,4 @@
-<div class="container-fluid mb-5">
+<div class="container-fluid mb-5 px-5">
   <div class="border border-dark pb-3 mb-3">
     <h1 class="h3 p-2 mb-4 px-4" style="background:#F0F0F0;color:black;">求人を検索</h1>
 
@@ -91,16 +91,22 @@
       </div>
     <% end %>
   </div>
-  <h1 class="h4 mb-1">
-    <span class="text-success"><%= @total_joboffers_count %></span> ジョプが見つかりました。
-  </h1>
+ <h1 class="h4 mb-1">
+  <% if @total_joboffers_count == 0 %>
+    <span class="text-danger">求人が見つかりませんでした。</span>
+  <% else %>
+    <span class="text-success"><%= @total_joboffers_count %></span>の求人が見つかりました。
+  <% end %>
+</h1>
+
+<% unless @total_joboffers_count == 0 %>
   <% @joboffers.each do |job_offer| %>
     <div class="border border-dark px-3 py-1 mt-3">
       <div class="d-flex justify-content-between align-items-center">
         <h1 class="h3 text-success mb-1"><%= job_offer.category.title %></h1>
         <% if current_user %>
-          <div class="pt-2">
-            <%= link_to "詳細を表示", t_job_offer_path(job_offer.id), class: 'btn btn-warning' %>
+          <div class="pt-2" style="color:white;">
+            <%= link_to "詳細を表示", t_job_offer_path(job_offer.id), class: 'btn btn-success' %>
           </div>
         <% end %>
       </div>
@@ -110,11 +116,14 @@
       </p>
       <p>
         <strong>勤務地 : </strong>
-        <span class="p-2 border border-dark rounded ms-2"><i class="fa-solid fa-location-dot me-2"></i><%= job_offer.location.city %></span>
+        <span class="p-2 border border-dark rounded ms-2">
+          <i class="fa-solid fa-location-dot me-2"></i><%= job_offer.location.city %>
+        </span>
       </p>
       <p style="width: 100%;">
-        <%= truncate(job_offer.description, length: 100) %>
+         <%= job_offer.description.length > 200 ? "#{job_offer.description.slice(0, 200)}..." : job_offer.description %>
       </p>
+
       <p>
         <strong>職種 : </strong>
         <span class="fs-5 fw-bold"><%= job_offer.category.title %></span>
@@ -126,7 +135,103 @@
       </p>
     </div>
   <% end %>
-  <div class="mt-2 d-flex justify-content-start">
+<% end %>
+ <div class="mt-3 d-flex justify-content-start">
     <%= paginate @joboffers %>
   </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Get the dropdown button
+  const button = document.getElementById("skillsDropdownButton");
+
+  // Clear any existing content and create two containers:
+  // Left container for badges and right container for the arrow.
+  button.innerHTML = ""; // Remove previous content
+
+  const leftContainer = document.createElement("div");
+  leftContainer.id = "badgeContainer";
+  leftContainer.textContent = "選択してください"; // Default text
+
+  const rightContainer = document.createElement("span");
+  
+
+  // Apply Bootstrap classes to the button for layout
+  button.classList.add("d-flex", "justify-content-between", "align-items-center");
+
+  // Append containers to the button
+  button.appendChild(leftContainer);
+  button.appendChild(rightContainer);
+
+  // Function to update the badge container based on selected checkboxes.
+  function updateBadgeContainer() {
+    const badgeContainer = document.getElementById("badgeContainer");
+    const checkboxes = document.querySelectorAll(".skill-checkbox");
+    let selected = [];
+
+    // Gather all selected skill labels.
+    checkboxes.forEach(cb => {
+      if (cb.checked) {
+        const label = document.querySelector(`label[for="${cb.id}"]`);
+        if (label) {
+          selected.push({ id: cb.id, text: label.textContent.trim() });
+        }
+      }
+    });
+
+    if (selected.length > 0) {
+      // Create badges for each selected skill.
+      badgeContainer.innerHTML = selected.map(skill => {
+        return `<span class="badge bg-primary me-1 p-2 fs-6" data-skill-id="${skill.id}">
+                  ${skill.text} <span class="remove-badge fs-5 ms-3" style="cursor:pointer;">&times;</span>
+                </span>`;
+      }).join("");
+    } else {
+      // Restore default text if no skill is selected.
+      badgeContainer.textContent = "選択してください";
+    }
+  }
+
+  // Listen for checkbox changes to update badges.
+  document.querySelectorAll(".skill-checkbox").forEach(cb => {
+    cb.addEventListener("change", updateBadgeContainer);
+  });
+
+  // Handle badge removal: when a user clicks the remove icon, uncheck the checkbox.
+  button.addEventListener("click", function(e) {
+    if (e.target.classList.contains("remove-badge")) {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent the click from closing the dropdown
+      const badge = e.target.closest(".badge");
+      const skillId = badge.getAttribute("data-skill-id");
+      if (skillId) {
+        const checkbox = document.getElementById(skillId);
+        if (checkbox) {
+          checkbox.checked = false;
+        }
+      }
+      updateBadgeContainer();
+
+      // Re-open the dropdown using Bootstrap's Dropdown API.
+      let dropdownInstance = bootstrap.Dropdown.getInstance(button);
+      if (!dropdownInstance) {
+        dropdownInstance = new bootstrap.Dropdown(button);
+      }
+      dropdownInstance.show();
+    }
+  });
+
+  // Run the update on page load to display any pre-selected skills.
+  updateBadgeContainer();
+
+  // Check for pre-selected skills and open the dropdown if any exist.
+  const preselected = document.querySelectorAll(".skill-checkbox:checked");
+  if (preselected.length > 0) {
+    let dropdownInstance = bootstrap.Dropdown.getInstance(button);
+    if (!dropdownInstance) {
+      dropdownInstance = new bootstrap.Dropdown(button);
+    }
+    dropdownInstance.show();
+  }
+});
+</script>

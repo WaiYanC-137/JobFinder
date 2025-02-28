@@ -10,7 +10,7 @@
 
 <div class="container-fluid px-5">
   <div class="border border-dark pb-3">
-    <h1 class="h3 p-2 mb-4 px-4" style="background:#F0F0F0;color:black;">求人を検索</h1>
+    <h1 class="h3 p-2 mb-4 px-4 bg-light text-dark">求人を検索</h1>
     <%= form_with url: "userlist", method: :get do |form| %>
       <div class="row">
         <div class="col-md-6">
@@ -21,10 +21,8 @@
                   <%= form.label :category_id, "職種", class: "form-label mb-0" %>
                 </td>
                 <td class="pb-3">
-                  <%= form.select :category_id, 
-                      options_for_select(@categories, @category_id), 
-                      { prompt: "選択してください" },
-                      { class: "form-select" } %>
+                  <%= form.select :category_id, options_for_select(@categories, @category_id), 
+                      { prompt: "選択してください" }, { class: "form-select" } %>
                 </td>
               </tr>
               <tr>
@@ -32,10 +30,8 @@
                   <%= form.label :location_id, "通勤地", class: "form-label mb-0" %>
                 </td>
                 <td class="pb-3">
-                  <%= form.select :location_id, 
-                          options_for_select(@locations, @location_id), 
-                          { prompt: "選択してください" }, 
-                          { class: "form-select" } %>
+                  <%= form.select :location_id, options_for_select(@locations, @location_id), 
+                      { prompt: "選択してください" }, { class: "form-select" } %>
                 </td>
               </tr>
             </tbody>
@@ -53,54 +49,50 @@
                   <%= form.label :skill_ids, "スキル", class: "form-label mb-0" %>
                 </td>
                 <td class="pb-3">
-  <div class="dropdown data-bs-auto-close="outside"">
-    <!-- Dropdown Button -->
-    <button id="skillsDropdownButton" class="w-100 btn border border-dark dropdown-toggle d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      選択してください
-    </button>
-    <!-- Dropdown Menu with Checkboxes -->
-    <div class="dropdown-menu p-2" aria-labelledby="skillsDropdownButton">
-      <% @skills.each do |skill| %>
-        <div class="form-check">
-          <%= check_box_tag "skill_ids[]", skill.id, @skill_ids.map(&:to_s).include?(skill.id.to_s), class: "form-check-input skill-checkbox", id: "skill_#{skill.id}" %>
-          <%= label_tag "skill_#{skill.id}", skill.title, class: "form-check-label" %>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</td>
-
+                  <div class="dropdown" data-bs-auto-close="outside">
+                    <button id="skillsDropdownButton" class="w-100 btn border border-dark dropdown-toggle d-flex justify-content-between align-items-center" 
+                      type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <span id="badgeContainer">選択してください</span>
+                    </button>
+                    <div class="dropdown-menu p-2" aria-labelledby="skillsDropdownButton">
+                      <% @skills.each do |skill| %>
+                        <div class="form-check">
+                          <%= check_box_tag "skill_ids[]", skill.id, @skill_ids.map(&:to_s).include?(skill.id.to_s), 
+                              class: "form-check-input skill-checkbox", id: "skill_#{skill.id}" %>
+                          <%= label_tag "skill_#{skill.id}", skill.title, class: "form-check-label" %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </td>
               </tr>
-
             </tbody>
           </table>
         </div>
       </div>
     <% end %>
   </div>
-  
-  <div class="mt-3">
-    <h1 class="h4 mb-3"><span class="text-success"><%= @total_users_count %></span>ユーザーが見つかりました。</h1>
-    <div class="border border-dark">
-      <% @m_users.each do |user| %>
-        <div class="row mb-3">
-          <div class="col-2">
-            <div class="d-flex flex-column justify-content-center align-items-center h-100">
-              <% if user.profile_picture.attached? %>
-                <%= image_tag user.profile_picture, class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
-              <% else %>
-                <%= image_tag "default_profile.png", class: "img-thumbnail rounded", style: "width: 150px; height: 150px; object-fit: cover;" %>
-              <% end %>
-              <%= link_to "プロフィールを見る", m_user_path(user.id), class: "btn btn-primary mt-2" %>
 
+  <div class="mt-3">
+    <% if @total_users_count == 0 %>
+      <h1 class="h4 mb-3 text-danger">ユーザーが見つかりませんでした。</h1>
+    <% else %>
+      <h1 class="h4 mb-3"><span class="text-success"><%= @total_users_count %></span>のユーザーが見つかりました。</h1>
+      <div class="border border-dark">
+        <% @m_users.each do |user| %>
+          <div class="row mb-3">
+            <div class="col-2 d-flex flex-column justify-content-center align-items-center h-100">
+              <%= image_tag user.profile_picture.attached? ? user.profile_picture : "default_profile.png", 
+                  class: "img-thumbnail rounded mt-3", style: "width: 150px; height: 150px; object-fit: cover;" %>
+              <% if current_company.present? %>
+                <%= link_to "プロフィールを見る", m_user_path(user.id), class: "btn btn-primary mt-2" %>
+              <% end %>
             </div>
-          </div>
-          <div class="col-10">
-            <div class="px-5 py-3">
+            <div class="col-10 px-5 py-3">
               <h1 class="text-success h3 mb-3"><%= user.name %></h1>
               <div class="mb-4">
                 <% user.t_skills.each do |skill| %>
-                  <span class="bg-primary px-3 py-2 rounded me-3" style="color:white;"><%= skill.title %></span>
+                  <span class="bg-primary px-3 py-2 rounded me-3 text-white"><%= skill.title %></span>
                 <% end %>
               </div>
               <div class="fs-5 fw-600">
@@ -108,106 +100,44 @@
               </div>
             </div>
           </div>
-        </div>
-      <% end %>
-    </div>
-    <div class="mt-4 d-flex justify-content-start">
-      <%= paginate @m_users %>
-    </div>
+        <% end %>
+      </div>
+      <div class="mt-4 d-flex justify-content-start">
+        <%= paginate @m_users %>
+      </div>
+    <% end %>
   </div>
 </div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // Get the dropdown button
   const button = document.getElementById("skillsDropdownButton");
+  const badgeContainer = document.getElementById("badgeContainer");
+  const checkboxes = document.querySelectorAll(".skill-checkbox");
 
-  // Clear any existing content and create two containers:
-  // Left container for badges and right container for the arrow.
-  button.innerHTML = ""; // Remove previous content
-
-  const leftContainer = document.createElement("div");
-  leftContainer.id = "badgeContainer";
-  leftContainer.textContent = "選択してください"; // Default text
-
-  const rightContainer = document.createElement("span");
-  
-
-  // Apply Bootstrap classes to the button for layout
-  button.classList.add("d-flex", "justify-content-between", "align-items-center");
-
-  // Append containers to the button
-  button.appendChild(leftContainer);
-  button.appendChild(rightContainer);
-
-  // Function to update the badge container based on selected checkboxes.
   function updateBadgeContainer() {
-    const badgeContainer = document.getElementById("badgeContainer");
-    const checkboxes = document.querySelectorAll(".skill-checkbox");
-    let selected = [];
-
-    // Gather all selected skill labels.
-    checkboxes.forEach(cb => {
-      if (cb.checked) {
-        const label = document.querySelector(`label[for="${cb.id}"]`);
-        if (label) {
-          selected.push({ id: cb.id, text: label.textContent.trim() });
-        }
-      }
+    let selected = [...checkboxes].filter(cb => cb.checked).map(cb => {
+      const label = document.querySelector(`label[for="${cb.id}"]`);
+      return { id: cb.id, text: label.textContent.trim() };
     });
 
-    if (selected.length > 0) {
-      // Create badges for each selected skill.
-      badgeContainer.innerHTML = selected.map(skill => {
-        return `<span class="badge bg-primary me-1 p-2 fs-6" data-skill-id="${skill.id}">
-                  ${skill.text} <span class="remove-badge fs-5 ms-3" style="cursor:pointer;">&times;</span>
-                </span>`;
-      }).join("");
-    } else {
-      // Restore default text if no skill is selected.
-      badgeContainer.textContent = "選択してください";
-    }
+    badgeContainer.innerHTML = selected.length > 0 ?
+      selected.map(skill => `<span class="badge bg-primary me-1 p-2 fs-6" data-skill-id="${skill.id}">
+        ${skill.text} <span class="remove-badge fs-5 ms-3" style="cursor:pointer;">&times;</span></span>`).join("") :
+      "選択してください";
   }
 
-  // Listen for checkbox changes to update badges.
-  document.querySelectorAll(".skill-checkbox").forEach(cb => {
-    cb.addEventListener("change", updateBadgeContainer);
-  });
+  checkboxes.forEach(cb => cb.addEventListener("change", updateBadgeContainer));
 
-  // Handle badge removal: when a user clicks the remove icon, uncheck the checkbox.
   button.addEventListener("click", function(e) {
     if (e.target.classList.contains("remove-badge")) {
       e.preventDefault();
-      e.stopPropagation(); // Prevent the click from closing the dropdown
-      const badge = e.target.closest(".badge");
-      const skillId = badge.getAttribute("data-skill-id");
-      if (skillId) {
-        const checkbox = document.getElementById(skillId);
-        if (checkbox) {
-          checkbox.checked = false;
-        }
-      }
+      e.stopPropagation();
+      document.getElementById(e.target.closest(".badge").getAttribute("data-skill-id")).checked = false;
       updateBadgeContainer();
-
-      // Re-open the dropdown using Bootstrap's Dropdown API.
-      let dropdownInstance = bootstrap.Dropdown.getInstance(button);
-      if (!dropdownInstance) {
-        dropdownInstance = new bootstrap.Dropdown(button);
-      }
-      dropdownInstance.show();
+      bootstrap.Dropdown.getOrCreateInstance(button).show();
     }
   });
 
-  // Run the update on page load to display any pre-selected skills.
   updateBadgeContainer();
-
-  // Check for pre-selected skills and open the dropdown if any exist.
-  const preselected = document.querySelectorAll(".skill-checkbox:checked");
-  if (preselected.length > 0) {
-    let dropdownInstance = bootstrap.Dropdown.getInstance(button);
-    if (!dropdownInstance) {
-      dropdownInstance = new bootstrap.Dropdown(button);
-    }
-    dropdownInstance.show();
-  }
-});
-</script>
+  if (document.querySelector(".skill-checkbox:checked")) bootstrap.Dropdown.getOrCreateInstan

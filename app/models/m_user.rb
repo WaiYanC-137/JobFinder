@@ -8,21 +8,25 @@ class MUser < ApplicationRecord
   belongs_to :category, class_name: 'TCategory', foreign_key: 'category_id', optional: true
   has_secure_password validations: false
 
-  validates :name, presence: true
-  
+  # Name validations
+  validates :name, presence: { message: "#{ERROR_MESSAGES[:blank]}" }
+  validates :name, length: { maximum: 10, message: "#{ERROR_MESSAGES[:too_long]}" }, if: -> { name.present? }
+
   # Email validations
-  validates :email, presence: { message: :blank }, uniqueness: true
-  validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]{2,}\z/i, message: :invalid }, if: -> { email.present? }
+  validates :email, presence: { message: "#{ERROR_MESSAGES[:blank]}" }
+  validates :email, uniqueness: { message: "#{LABELS[:m_user][:email]}は既に使用されています" }
+  validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]{2,}\z/i, message: "#{ERROR_MESSAGES[:invalid]}" }, if: -> { email.present? }
 
   # Password validations
- validates :password, presence: { message: :blank }, on: :create
- validates :password, length: { minimum: 6, message: :too_short }, if: -> { password.present? }, on: :create
+  validates :password, presence: { message: "#{ERROR_MESSAGES[:blank]}" }, on: :create
+  validates :password, length: { minimum: 6, message: "#{ERROR_MESSAGES[:too_short]}" }, if: -> { password.present? }, on: :create
+  validates :password, length: { maximum: 20, message: "#{ERROR_MESSAGES[:too_long]}" }, if: -> { password.present? }, on: :create
 
-  # Password validations
-  validates :password_confirmation, presence: { message: :blank }, on: :create
-  validates :password_confirmation, presence: { message: :blank }, if: -> { password.present? }
-  validates :password_confirmation, length: { minimum: 6, message: :too_short }, if: -> { password_confirmation.present? }
-  validates :password, confirmation: { message: :mismatch }, if: -> { password.present? && password_confirmation.present? }
+  # Password confirmation validations
+  validates :password_confirmation, presence: { message: "#{ERROR_MESSAGES[:blank]}" }, on: :create
+  validates :password_confirmation, length: { minimum: 6, message: "#{ERROR_MESSAGES[:too_short]}" }, if: -> { password_confirmation.present? }
+  validates :password_confirmation, length: { maximum: 20, message: "#{ERROR_MESSAGES[:too_long]}" }, if: -> { password_confirmation.present? }
+  validates :password, confirmation: { message: "#{ERROR_MESSAGES[:mismatch]}" }, if: -> { password.present? && password_confirmation.present? }
 
   # Generates a token and stores its hash in the database
   def remember
@@ -40,7 +44,4 @@ class MUser < ApplicationRecord
   def forget
     update(remember_digest: nil)
   end
-
-  
-
 end

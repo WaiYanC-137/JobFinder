@@ -4,36 +4,45 @@ class SessionsController < ApplicationController
   end
 
   def create
-    # Try to find the user or company by email
+    # Try to find the user by email first
     @user = MUser.find_by(email: params[:email])
-    @company = MCompany.find_by(email: params[:email])
-
-    # If user exists and password is correct
-    if @user && @user.authenticate(params[:password])
-      log_in(@user)
-      if params[:remember_me] == '1'
-        remember(@user)
+  
+    if @user
+      # If user exists and password is correct
+      if @user.authenticate(params[:password])
+        log_in(@user)
+        # Remember or forget the user based on the "remember_me" checkbox
+        if params[:remember_me] == '1'
+          remember(@user)
+        else
+          forget(@user)
+        end
+        redirect_to joblist_path, notice: "Logged in as user."
       else
-        forget(@user)
+        flash.now[:alert] = "Email or password is incorrect."
+        render :new
       end
-      redirect_to joblist_path, notice: "Logged in as user."
-    
-    # If company exists and password is correct
-    elsif @company && @company.authenticate(params[:password])
-      log_in(@company)
-      if params[:remember_me] == '1'
-        remember(@company)
-      else
-        forget(@company)
-      end
-      redirect_to userlist_path, notice: "Logged in as company."
-    
-    # If email or password is incorrect
+  
+    # If user is not found, try to find the company by email
     else
-      flash.now[:alert] = "Email or password is incorrect."
-      render :new
+      @company = MCompany.find_by(email: params[:email])
+  
+      if @company && @company.authenticate(params[:password])
+        log_in(@company)
+        # Remember or forget the company based on the "remember_me" checkbox
+        if params[:remember_me] == '1'
+          remember(@company)
+        else
+          forget(@company)
+        end
+        redirect_to userlist_path, notice: "Logged in as company."
+      else
+        flash.now[:alert] = "Email or password is incorrect."
+        render :new
+      end
     end
   end
+  
 
   def destroy
     if current_entity

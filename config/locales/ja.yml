@@ -2,56 +2,16 @@ ja:
   activerecord:
     attributes:
       m_company:
-        name: ""
-        email: ""
-        phone: ""
-        password: ""
-        password_confirmation: ""
+        name: "会社名"
+        email: "メールアドレス"
+        phone: "電話番号"
+        password: "パスワード"
+        password_confirmation: "確認用パスワード"
       m_user:
-        name: ""
-        email: ""
-        password: ""
-        password_confirmation: ""
-    errors:
-      models:
-        m_company:
-          attributes:
-            name:
-              blank: "名前を入力してください"
-            phone:
-              blank: "電話番号を入力してください"
-            email:
-              blank: "メールアドレスを入力してください"
-              invalid: "無効なメールアドレスです"
-            password:
-              blank: "パスワードを入力してください"
-              too_short: "パスワードは%{count}文字以上で入力してください"
-            password_confirmation:
-              blank: "確認用パスワードを入力してください"
-              too_short: "パスワードは%{count}文字以上で入力してください"
-              confirmation: "パスワード確認が一致しません"
-              mismatch: "パスワードが一致しません"
-        m_user:
-          attributes:
-            name:
-              blank: "名前を入力してください"
-            email:
-              blank: "メールアドレスを入力してください"
-              invalid: "無効なメールアドレスです"
-            password:
-              blank: "パスワードを入力してください"
-              too_short: "パスワードは%{count}文字以上で入力してください"
-            password_confirmation:
-              blank: "確認用パスワードを入力してください"
-              too_short: "パスワードは%{count}文字以上で入力してください"
-              confirmation: "パスワード確認が一致しません"
-              mismatch: "パスワードが一致しません"
-    messages:
-      blank: "を入力してください"
-      too_short: "は%{count}文字以上で入力してください"
-      invalid: "は無効です"
-      confirmation: "は一致しません"
-
+        name: "名前"
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "確認用パスワード"
   datetime:
     distance_in_words:
       less_than_x_minutes:
