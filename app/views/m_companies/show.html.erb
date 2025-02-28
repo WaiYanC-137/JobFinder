@@ -30,7 +30,7 @@
         </h1>
 
         <!-- Category & Location -->
-        <div class="w-25 d-flex justify-content-between align-items-center">
+        <div class="w-25 d-flex justify-content-start align-items-center">
           <a href="#" class="text-decoration-none text-secondary btn border-dark">
             <i class="fa-solid fa-location-dot me-2"></i>
             <%= @m_company.location&.city || "No Location" %>
@@ -46,9 +46,9 @@
   <p class="mb-2 mt-3"><%= @m_company.info%></p>
   <div class="border border-dark px-3 my-3">
     <h1 class="h3 mb-4">コンタクト</h1>
-    <p class="mb-2"><i class="fa-solid fa-phone me-5 fs-4"></i><%=@m_company.phone%></p>
-    <p class="mb-2"><i class="fa-solid fa-envelope me-5 fs-4"></i><%=@m_company.email%></p>
-    <p class="mb-2"><i class="fa-solid fa-address-book me-5 fs-4"></i><%=@m_company.address%></p>
+    <p class="mb-2"><i class="fa-solid fa-phone me-2 fs-4"></i><%=@m_company.phone%></p>
+    <p class="mb-2"><i class="fa-solid fa-envelope me-2 fs-4"></i><%=@m_company.email%></p>
+    <p class="mb-2"><i class="fa-solid fa-address-book me-2 fs-4"></i><%=@m_company.address%></p>
   </div>
 <div class="border border-dark py-2 px-3 mt-2">
   <h1 class="h3 mb-3">募集概要</h1>

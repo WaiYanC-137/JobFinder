@@ -30,7 +30,6 @@ class MCompaniesController < ApplicationController
   def show
     @m_company = MCompany.find(params[:id])
     @joboffers = @m_company.t_job_offers
-                           .joins(:m_users)
                            .distinct
                            .order(created_at: :desc)
                            .page(params[:page])
@@ -43,7 +42,9 @@ class MCompaniesController < ApplicationController
 
   def update
     @m_company = MCompany.find(params[:id])
-
+    @categories = TCategory.all 
+    @skills = TSkill.all       
+    @locations = TLocation.all
     # Check if the email already exists in the MUser table and not for the current company
     if MUser.exists?(email: m_company_params[:email])
       flash.now[:alert] = "このメールアドレスはすでにユーザーアカウントとして使用されています。"
@@ -53,6 +54,15 @@ class MCompaniesController < ApplicationController
       render :edit, status: :unprocessable_entity and return
     end
 
+    # Validate profile picture format if provided
+    if params[:m_company][:logo].present?
+      unless valid_image_format?(params[:m_company][:logo])
+        flash.now[:alert] = "プロフィール画像は JPG または JPEG 形式のみ対応しています。"
+        render :edit, status: :unprocessable_entity
+        return
+      end
+    end
+  
     # Update fields excluding password (unless provided)
     if m_company_params[:password].present?
       @m_company.password = m_company_params[:password]
@@ -60,14 +70,7 @@ class MCompaniesController < ApplicationController
     end
 
     # Proceed with updating company attributes
-    if @m_company.update(
-        name: m_company_params[:name],
-        phone: m_company_params[:phone],
-        location_id: m_company_params[:location_id],
-        address: m_company_params[:address],
-        info: m_company_params[:info],
-        logo: m_company_params[:logo]
-      )
+    if @m_company.update(m_company_params)
 
       redirect_to m_company_path(@m_company), notice: '企業情報が更新されました。'
     else
@@ -104,6 +107,11 @@ class MCompaniesController < ApplicationController
       flash[:alert] = 'ログインしてください。'
       redirect_to login_path # Redirect to login if the company is not logged in
     end
+  end
+  
+  def valid_image_format?(file)
+    allowed_types = ["image/jpeg", "image/jpg" , "image/png"]
+    allowed_types.include?(file.content_type)
   end
 
   def password_params

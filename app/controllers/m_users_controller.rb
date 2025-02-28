@@ -129,7 +129,7 @@ class MUsersController < ApplicationController
   end
 
   def valid_image_format?(file)
-    allowed_types = ["image/jpeg", "image/jpg"]
+    allowed_types = ["image/jpeg", "image/jpg" , "image/png"]
     allowed_types.include?(file.content_type)
   end
 

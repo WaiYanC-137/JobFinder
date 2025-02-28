@@ -1,6 +1,6 @@
 class MUser < ApplicationRecord
   attr_accessor :remember_token
-  validate :profile_picture_format
+
   has_one_attached :profile_picture
   belongs_to :location, class_name: 'TLocation', foreign_key: 'location_id', optional: true
   has_and_belongs_to_many :t_job_offers, join_table: :m_users_t_job_offers

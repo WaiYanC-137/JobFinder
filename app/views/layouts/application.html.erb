@@ -61,7 +61,7 @@
               <li class="nav-item">
                 <a class="nav-link mx-3 px-3 fw-bold <%= 'active bg-secondary text-white' if current_page?('/joblist') %>" href="/joblist">求人一覧</a>
               </li>
-              <li class="nav-item dropdown mx-3">
+              <li class="nav-item dropdown mx-3 me-5">
                 <a class="nav-link dropdown-toggle" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <%= current_user.name %>
                 </a>
@@ -70,7 +70,6 @@
                   <li><%= link_to 'プロフィール編集', edit_m_user_path(current_user.id), class: 'dropdown-item' %></li>
                   <li><%= link_to 'パスワードの編集', edit_password_user_path, class: 'dropdown-item' %></li>
                   <%= button_to 'ログアウト', logout_path, method: :delete, data: { turbo: false }, class: 'btn btn-danger dropdown-item' %>
-
                 </ul>
               </li>
             <% elsif current_company.present? %>
