@@ -1,6 +1,5 @@
 <div class="container pb-5 mb-5">
   <div class="container">
-  <div class="">
     <div class="row">
       <div class="col-8">
         <h2 class="h3"><%= @job_offer.title %></h2>
@@ -11,77 +10,57 @@
 
         <p><span class="fs-6">必要なスキル : </span>
           <% @job_offer.t_skills.each do |skill| %>
-            <span class="bg-primary mr-2 px-2 py-1 rounded" style="color:white;"><%= skill.title %></span>
+            <span class="bg-primary mr-2 px-2 py-1 rounded text-white"><%= skill.title %></span>
           <% end %>
         </p>
       </div>
 
-      <div class="col-4">
-        <div class="d-flex flex-column align-items-end justify-content-around h-100">
-          <% posted_time = (@job_offer.updated_at && @job_offer.updated_at != @job_offer.created_at) ? @job_offer.updated_at : @job_offer.created_at %>
-          <p class="fs-5">Posted <%= time_ago_in_words(posted_time) %> ago</p>
+      <div class="col-4 d-flex flex-column align-items-end justify-content-around h-100">
+        <% posted_time = @job_offer.updated_at.presence || @job_offer.created_at %>
+        <p class="fs-5">Posted <%= time_ago_in_words(posted_time) %> ago</p>
 
-
-          <% if current_user %>
-            <% if @job_offer.m_users.exists?(id: current_user.id) %>
-              <!-- The user has already applied; disable the button -->
-              <%= link_to '提出済み', "#", class: 'btn btn-secondary disabled', style: "color:white;", aria: { disabled: true } %>
-            <% else %>
-              <!-- The user hasn't applied; enable the button -->
-              <%= link_to '提出', apply_job_offer_path(@job_offer.id), class: 'btn btn-success', style: "color:white;" %>
-            <% end %>
-          <% elsif current_company && @job_offer.company_id == current_company.id %>
-            <!-- If the logged-in entity is the company that posted the job, show edit & delete buttons -->
-            <div class="d-flex gap-2">
-              <%= link_to '編集', edit_t_job_offer_path(@job_offer), class: 'btn btn-warning' %>
-              <%= button_to '削除', @job_offer, method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
-            </div>
+        <% if current_user %>
+          <% if @job_offer.m_users.exists?(id: current_user.id) %>
+            <%= link_to '提出済み', "#", class: 'btn btn-secondary disabled text-white', aria: { disabled: true } %>
+          <% else %>
+            <%= link_to '提出', apply_job_offer_path(@job_offer.id), class: 'btn btn-success text-white' %>
           <% end %>
-        </div>
+        <% elsif current_company && @job_offer.company_id == current_company.id %>
+          <div class="d-flex gap-2">
+            <%= link_to '編集', edit_t_job_offer_path(@job_offer), class: 'btn btn-warning' %>
+            <%= button_to '削除', @job_offer, method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
+          </div>
+        <% end %>
       </div>
     </div>
 
     <h5>仕事内容</h5>
-    <div class="border border-dark p-1">
+    <div class="border border-dark px-3 py-1">
       <%= simple_format(@job_offer.description) %>
     </div>
 
-    <p class="mt-2">投稿 : <span class="fs-6 text-primary"><%= @job_offer.company.name %></span> </p>
+    <p class="mt-2">投稿 : <span class="fs-6 text-primary"><%= @job_offer.company.name %></span></p>
   </div>
-</div>
 
-<% if current_company %>
-  <div class="container mt-4">
-  <h1 class="h4 mb-0"><%= @job_offer.m_users.count %>人のユーザーが提案を提出しました。</h1>
+  <% if current_company && @job_offer.m_users.any? %>
+    <div class="container mt-4">
+      <h1 class="h4 mb-0"><%= @job_offer.m_users.count %> 人のユーザーが提案を提出しました。</h1>
 
-    <div class="border rounded shadow-sm bg-light">
-      
-      <!-- Header -->
-      <h1 class="h4 bg-dark text-white py-2 px-3 rounded-top">応募ユーザー</h1>
+      <div class="border rounded shadow-sm bg-light">
+        <h1 class="h4 bg-dark text-white py-2 px-3 rounded-top">応募ユーザー</h1>
 
-      <!-- Users List -->
-      <% @job_offer.m_users.each do |user| %>
-        <div class="row align-items-center px-3 py-2 border-bottom">
-          <div class="col-2 text-center">
-            <% if user.profile_picture.attached? %>
-              <%= image_tag user.profile_picture, class: "rounded-circle border", style: "width: 75px; height: 75px; object-fit: cover;" %>
-            <% else %>
-              <%= image_tag "default_profile.png", class: "rounded-circle border", style: "width: 75px; height: 75px; object-fit: cover;" %>
-            <% end %>
+        <% @job_offer.m_users.each do |user| %>
+          <div class="row align-items-center px-3 py-2 border-bottom">
+            <div class="col-2 text-center">
+              <%= image_tag user.profile_picture.attached? ? user.profile_picture : "default_profile.png", class: "rounded-circle border", style: "width: 75px; height: 75px; object-fit: cover;" %>
+            </div>
+            <div class="col-10">
+              <h2 class="h5 text-dark mb-1"><%= user.name %></h2>
+              <span class="badge bg-success fs-6 py-2 px-3 rounded-pill"><%= user.category.title %></span>
+            </div>
           </div>
-
-          <div class="col-10">
-            <h2 class="h5 text-dark mb-1"><%= user.name %></h2>
-            <span class="badge bg-success fs-6 py-2 px-3 rounded-pill">
-              <%= user.category.title %>
-            </span>
-          </div>
-        </div>
-      <% end %>
-
+        <% end %>
+      </div>
     </div>
-  </div>
-<% end %>
-
-
+  <% end %>
 </div>

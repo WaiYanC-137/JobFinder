@@ -51,7 +51,9 @@ class TJobOffersController < ApplicationController
   def set_form_data
     @locations = TLocation.all.pluck(:city, :id)
     @categories = TCategory.all.pluck(:title, :id)
-    @skills = TSkill.all
+    @skills = TSkill.all || [] # Ensure @skills is never nil
+    Rails.logger.debug "Loaded skills: #{@skills.inspect}"
+
   end
 
   def job_offer_params

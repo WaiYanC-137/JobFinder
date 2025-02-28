@@ -33,7 +33,7 @@ class MCompaniesController < ApplicationController
                            .distinct
                            .order(created_at: :desc)
                            .page(params[:page])
-                           .per(2)
+                           .per(3)
   end
 
   def edit

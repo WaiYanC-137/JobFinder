@@ -1,6 +1,6 @@
 class MUsersController < ApplicationController
   # Ensure that user is authenticated for edit, update, and show actions
-  before_action :authenticate_user!, only: [:edit, :update, :edit_password_user, :update_password]
+  before_action :authenticate_user!, only: [:edit, :update, :edit_password, :update_password]
 
   def new
     @m_user = MUser.new
@@ -33,7 +33,7 @@ class MUsersController < ApplicationController
 
   def show
     @m_user = MUser.find(params[:id])
-    @joboffers = @m_user.t_job_offers.order(created_at: :desc).page(params[:page]).per(2)
+    @joboffers = @m_user.t_job_offers.order(created_at: :desc).page(params[:page]).per(3)
   end
 
   def edit
@@ -86,9 +86,8 @@ class MUsersController < ApplicationController
     end
   end
   
-  
 
-  def edit_password_user
+  def edit_password
     @user = current_user
   end
 

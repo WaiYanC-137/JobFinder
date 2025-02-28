@@ -8,3 +8,17 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+/* app/assets/stylesheets/application.css */
+@import "bootstrap";
+/* If using Bootstrap via asset pipeline */
+@import "font-awesome";
+/* If using FontAwesome via asset pipeline */
+@import "custom";
+/* Your custom styles */
+
+.form-control::placeholder {
+
+    /* Bootstrap's default muted text color */
+    opacity: 0.7;
+    /* Ensure full visibility */
+}

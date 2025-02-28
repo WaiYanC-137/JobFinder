@@ -50,16 +50,36 @@
     <p class="mb-2"><i class="fa-solid fa-envelope me-2 fs-4"></i><%=@m_company.email%></p>
     <p class="mb-2"><i class="fa-solid fa-address-book me-2 fs-4"></i><%=@m_company.address%></p>
   </div>
-<div class="border border-dark py-2 px-3 mt-2">
+<div class="border border-dark py-1 px-3 mt-2">
   <h1 class="h3 mb-3">募集概要</h1>
-  <% @joboffers.each do |job_offer| %>
-      <p class="mb-3"><%= link_to job_offer.category.title, t_job_offer_path(job_offer.id) , class: "text-decoration-none" %>
-      <span class="badge bg-primary ms-3 fs-6"><%=job_offer.m_users.count%></span></p>
-      <!-- You can add more fields as needed, e.g., salary, location, etc. -->
-  <% end %>
+  
+  <table class="table table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>タイトル</th>
+        <th>応募者数</th>
+        <th>投稿時間</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @joboffers.each do |job_offer| %>
+        <tr>
+          <td>
+            <%= link_to job_offer.category.title, t_job_offer_path(job_offer.id), class: "text-decoration-none" %>
+          </td>
+          <td>
+            <span class="badge bg-danger fs-6"><%= job_offer.m_users.count %></span>
+          </td>
+          <td><%= job_offer.created_at.strftime("%Y-%m-%d") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
   <div class="pagination d-flex justify-content-end mt-1">
-      <%= paginate @joboffers %>
+    <%= paginate @joboffers %>
   </div>
 </div>
+
 
 </div>

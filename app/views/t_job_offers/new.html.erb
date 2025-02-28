@@ -1,52 +1,114 @@
 <div class="container-fluid w-50">
-<h1>募集書の作成</h1>
+  <h1>募集書の作成</h1>
 
-<%= form_with model: @job_offer, local: true do |f| %>
-  <div class="mb-3">
-    <%= f.label :title, "タイトル" %>
-    <%= f.text_field :title, class: "form-control", required: true %>
-  </div>
-<div class="d-flex gap-3">
-    <div class="mb-3 w-50">
+  <%= form_with model: @job_offer, local: true do |f| %>
+    <div class="mb-3">
+      <%= f.label :title, "タイトル" %>
+      <%= f.text_field :title, class: "form-control", required: true %>
+    </div>
+
+    <div class="d-flex gap-3">
+      <div class="mb-3 w-50">
         <%= f.label :minsalary, "Minimum Salary" %>
         <%= f.number_field :minsalary, step: 0.01, class: "form-control", required: true %>
-    </div>
+      </div>
 
-    <div class="mb-3 w-50">
+      <div class="mb-3 w-50">
         <%= f.label :maxsalary, "Maximum Salary" %>
         <%= f.number_field :maxsalary, step: 0.01, class: "form-control", required: true %>
+      </div>
     </div>
-</div>  <!-- ✅ Correctly closed the d-flex div -->
 
+    <div class="mb-3">
+      <%= f.label :location_id, "Location" %>
+      <%= f.select :location_id, options_for_select(@locations), { prompt: "Select a location" }, class: "form-select", required: true %>
+    </div>
 
-  <div class="mb-3">
-    <%= f.label :location_id, "Location" %>
-    <%= f.select :location_id, options_for_select(@locations), { prompt: "Select a location" }, class: "form-select", required: true %>
-  </div>
+    <div class="mb-3">
+      <%= f.label :category_id, "職種" %>
+      <%= f.select :category_id, options_for_select(@categories), { prompt: "Select a category" }, class: "form-select", required: true %>
+    </div>
 
-  <div class="mb-3">
-    <%= f.label :category_id, "職種" %>
-    <%= f.select :category_id, options_for_select(@categories), { prompt: "Select a category" }, class: "form-select", required: true %>
-  </div>
-    <div class="mb-2">
-  <%= f.label :t_skill_ids, "スキル", class: "form-label mb-0" %>
-  <%= f.select :t_skill_ids, 
-      options_for_select(@skills.map { |skill| [skill.title, skill.id] }, @job_offer.t_skills.pluck(:id)), 
-      { prompt: "選択してください",multiple: true }, 
-      { class: "form-select", id: "skill_select" } %>
+    <!-- Skill Selection Dropdown -->
+    <div class="mb-3">
+      <%= f.label :t_skill_ids, "スキル", class: "form-label" %>
+      <div class="dropdown">
+        <button class="btn border border-dark dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button" id="skillsDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+          選択してください
+        </button>
+        <div class="dropdown-menu p-3 w-100" aria-labelledby="skillsDropdownButton">
+          <% @skills.each do |skill| %>
+            <div class="form-check">
+              <%= check_box_tag "t_skill_ids[]", skill.id, false, class: "form-check-input skill-checkbox", id: "skill_#{skill.id}" %>
+              <%= label_tag "skill_#{skill.id}", skill.title, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :description, "Job Description" %>
+      <%= f.text_area :description, class: "form-control", rows: 2, required: true %>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <%= f.submit "Create Job Offer", class: "btn btn-primary" %>
+      <%= link_to "Back", t_job_offers_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
 </div>
 
+<!-- JavaScript to update the dropdown button based on selected skills -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const button = document.getElementById("skillsDropdownButton");
 
-  <div class="mb-3">
-    <%= f.label :description, "Job Description" %>
-    <%= f.text_area :description, class: "form-control", rows: 3, required: true %>
-  </div>
-  <div class="d-flex justify-content-between align-items-center">
-    <%= f.submit "Create Job Offer", class: "btn btn-primary" %>
-    <%= link_to "Back", t_job_offers_path, class: "btn btn-secondary" %>
-  </div>
-  
-<% end %>
+  button.innerHTML = '<span id="badgeContainer">選択してください</span>';
 
+  function updateBadgeContainer() {
+    const badgeContainer = document.getElementById("badgeContainer");
+    const checkboxes = document.querySelectorAll(".skill-checkbox");
+    let selected = [];
 
-</div>
+    checkboxes.forEach(cb => {
+      if (cb.checked) {
+        const label = document.querySelector(`label[for="${cb.id}"]`);
+        if (label) {
+          selected.push({ id: cb.id, text: label.textContent.trim() });
+        }
+      }
+    });
+
+    if (selected.length > 0) {
+      badgeContainer.innerHTML = selected.map(skill => `
+        <span class="badge bg-primary me-1 p-2 fs-6" data-skill-id="${skill.id}">
+          ${skill.text} <span class="remove-badge fs-5 ms-2" style="cursor:pointer;">&times;</span>
+        </span>
+      `).join("");
+    } else {
+      badgeContainer.textContent = "選択してください";
+    }
+  }
+
+  document.querySelectorAll(".skill-checkbox").forEach(cb => {
+    cb.addEventListener("change", updateBadgeContainer);
+  });
+
+  button.addEventListener("click", function(e) {
+    if (e.target.classList.contains("remove-badge")) {
+      e.preventDefault();
+      e.stopPropagation();
+      const badge = e.target.closest(".badge");
+      const skillId = badge.getAttribute("data-skill-id");
+      if (skillId) {
+        const checkbox = document.getElementById(skillId);
+        if (checkbox) checkbox.checked = false;
+      }
+      updateBadgeContainer();
+    }
+  });
+
+  updateBadgeContainer();
+});
+</script>
