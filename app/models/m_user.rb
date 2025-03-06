@@ -14,7 +14,7 @@ class MUser < ApplicationRecord
 
   # Email validations
   validates :email, presence: { message: "#{ERROR_MESSAGES[:blank]}" }
-  validates :email, uniqueness: { message: "#{LABELS[:m_user][:email]}は既に使用されています" }
+  validates :email, uniqueness: true
   validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]{2,}\z/i, message: "#{ERROR_MESSAGES[:invalid]}" }, if: -> { email.present? }
 
   # Password validations

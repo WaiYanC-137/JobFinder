@@ -93,25 +93,31 @@
       </div>
     </nav>
 
-    <!-- Flash Messages -->
-    <div class="d-flex justify-content-center my-2">
-      <ul class="list-group">
-        <% flash.each do |key, messages| %>
-          <% # Ensure messages is an array, otherwise just display the string directly %>
-          <% if messages.is_a?(Array) %>
-            <% messages.each do |message| %>
-              <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success fade-message" %>">
-                <%= message %>
-              </li>
-            <% end %>
-          <% else %>
-            <li class="list-group-item <%= key == "alert" ? "list-group-item-danger" : "list-group-item-success fade-message" %>">
-              <%= messages %>
-            </li>
-          <% end %>
+   <!-- Flash Messages -->
+<div class="d-flex justify-content-center my-2">
+  <ul class="list-group shadow-lg w-75">
+    <% flash.each do |key, messages| %>
+      <% alert_class = key == "alert" ? "list-group-item-danger" : "list-group-item-success fade-message" %>
+      <% icon = key == "alert" ? "fas fa-exclamation-circle" : "fas fa-check-circle" %>
+
+      <% if messages.is_a?(Array) %>
+        <% messages.each do |message| %>
+          <li class="list-group-item d-flex align-items-center p-3 rounded <%= alert_class %>">
+            <i class="<%= icon %> me-2"></i>
+            <span><%= message %></span>
+          </li>
         <% end %>
-      </ul>
-    </div>
+      <% else %>
+        <li class="list-group-item d-flex align-items-center p-3 rounded <%= alert_class %>">
+          <i class="<%= icon %> me-2"></i>
+          <span><%= messages %></span>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
+
+
 
     <!-- Yield Content (Main Content) -->
     <%= yield %>

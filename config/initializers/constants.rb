@@ -1,3 +1,8 @@
+LABELS = {
+login:  "ログイン",
+user_account_creation: "ユーザーアカウントの作成",
+company_account_creation: "会社アカウントの作成"
+}.freeze
 
 ERROR_MESSAGES = {
   blank: "を入力してください",
