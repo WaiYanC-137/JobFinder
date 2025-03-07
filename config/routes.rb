@@ -14,7 +14,11 @@ Rails.application.routes.draw do
   patch 'update_password_user', to: 'm_users#update_password'
   get 'apply_job_offer/:job_offer_id', to: 'm_users#apply_job_offer', as: 'apply_job_offer'
 
-  resources :t_job_offers
+  resources :t_job_offers do
+    member do
+      patch :restrict
+    end
+  end
 
   # Company Authentication
   resources :m_companies

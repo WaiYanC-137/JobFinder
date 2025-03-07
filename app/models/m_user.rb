@@ -10,7 +10,7 @@ class MUser < ApplicationRecord
 
   # Name validations
   validates :name, presence: { message: "#{ERROR_MESSAGES[:blank]}" }
-  validates :name, length: { maximum: 10, message: "#{ERROR_MESSAGES[:too_long]}" }, if: -> { name.present? }
+  validates :name, length: { maximum: 30, message: "#{ERROR_MESSAGES[:too_long]}" }, if: -> { name.present? }
 
   # Email validations
   validates :email, presence: { message: "#{ERROR_MESSAGES[:blank]}" }

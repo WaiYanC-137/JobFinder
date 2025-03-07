@@ -7,11 +7,11 @@ class MCompany < ApplicationRecord
 
   # Name validations
   validates :name, presence: { message: ERROR_MESSAGES[:blank] }
-  validates :name, length: { maximum: 10, message: ERROR_MESSAGES[:too_long] }, if: -> { name.present? }
+  validates :name, length: { maximum: 30, message: ERROR_MESSAGES[:too_long] }, if: -> { name.present? }
 
   # Phone validations
   validates :phone, presence: { message: ERROR_MESSAGES[:blank] }
-  validate :phone_format  # Custom validation for phone format
+  validate :phone_format 
 
   # Email validations
   validates :email, presence: { message: ERROR_MESSAGES[:blank] }
@@ -59,7 +59,7 @@ class MCompany < ApplicationRecord
       myanmar_regex = /\A(09\d{9}|\+959\d{9})\z/
 
       unless normalized_phone.match?(myanmar_regex)
-        errors.add(:phone, ERROR_MESSAGES[:invalid_phone]) # Use constant for invalid phone format
+        errors.add(:phone, ERROR_MESSAGES[:invalid]) # Use constant for invalid phone format
       end
     end
   end

@@ -42,6 +42,23 @@ class TJobOffersController < ApplicationController
     end
   end
 
+  def restrict
+    # Find the job offer using the provided ID from the URL
+    job_offer = TJobOffer.find(params[:id])
+
+    # Toggle the restricted status
+    if job_offer.restricted.nil? || job_offer.restricted == false 
+      job_offer.update(restricted: true)  # Restrict applications
+      flash[:notice] = "応募が制限されました。"  # "Applications have been restricted."
+    else
+      job_offer.update(restricted: false)  # Allow applications again
+      flash[:notice] = "応募が再開されました。"  # "Applications have been reopened."
+    end
+    
+    # Redirect back to the job offer page
+    redirect_to job_offer
+  end
+
   private
 
   def set_job_offer

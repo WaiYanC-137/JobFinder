@@ -2,12 +2,20 @@
   <div class="container">
     <div class="row">
       <div class="col-8">
-        <h2 class="h3"><%= @job_offer.title %></h2>
+        <h2 class="h3">
+          <%= @job_offer.title %>
+          <% if @job_offer.restricted %>
+            <i class="fa-solid fa-bullhorn ms-3 text-warning"></i>
+          <% else %>
+            <i class="fa-solid fa-bullhorn ms-3 text-success"></i>
+          <% end %>
+
+        </h2>
 
         <p><span class="fs-6">職種 : </span> <%= @job_offer.category.title %></p>
         <p><span class="fs-6">給料 : </span> <%= number_to_currency(@job_offer.minsalary) %> ~ <%= number_to_currency(@job_offer.maxsalary) %></p>
         <p><span class="fs-6">勤務地 : </span> <%= @job_offer.location.city %></p>
-
+        
         <p><span class="fs-6">必要なスキル : </span>
           <% @job_offer.t_skills.each do |skill| %>
             <span class="bg-primary mr-2 px-2 py-1 rounded text-white"><%= skill.title %></span>
@@ -20,11 +28,10 @@
         <p class="fs-5">Posted <%= time_ago_in_words(posted_time) %> ago</p>
 
         <% if current_user %>
-          <% if @job_offer.m_users.exists?(id: current_user.id) %>
-            <%= link_to '提出済み', "#", class: 'btn btn-secondary disabled text-white', aria: { disabled: true } %>
-          <% else %>
-            <%= link_to '提出', apply_job_offer_path(@job_offer.id), class: 'btn btn-success text-white' %>
-          <% end %>
+          <%= link_to @job_offer.m_users.exists?(id: current_user.id) ? '提出済み' : '提出', 
+                      @job_offer.m_users.exists?(id: current_user.id) ? '#' : apply_job_offer_path(@job_offer.id), 
+                      class: "btn #{ @job_offer.m_users.exists?(id: current_user.id) ? 'btn-secondary disabled' : 'btn-success' } text-white", 
+                      aria: { disabled: @job_offer.m_users.exists?(id: current_user.id) } %>
         <% elsif current_company && @job_offer.company_id == current_company.id %>
           <div class="d-flex gap-2">
             <%= link_to '編集', edit_t_job_offer_path(@job_offer), class: 'btn btn-warning' %>
@@ -38,17 +45,27 @@
     <div class="border border-dark px-3 py-1">
       <%= simple_format(@job_offer.description) %>
     </div>
-
+    
     <p class="mt-2">投稿 : <span class="fs-6 text-primary"><%= @job_offer.company.name %></span></p>
   </div>
 
+  <% if current_company %>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="h4 <%= @job_offer.m_users.count.zero? ? 'text-danger' : '' %>">
+        <%= @job_offer.m_users.count.zero? ? 'まだユーザーが提案を提出していません。' : "#{@job_offer.m_users.count} 人のユーザーが提案を提出しました。" %>
+      </h1>
+      <% if @job_offer.restricted %>
+        <%= button_to "制限", restrict_t_job_offer_path(@job_offer), method: :patch, class: "btn btn-warning px-3", data: { confirm: "この求人の応募を制限しますか？" } %>
+      <% else %>
+        <%= button_to "制限", restrict_t_job_offer_path(@job_offer), method: :patch, class: "btn btn-success px-3", data: { confirm: "この求人の応募を制限しますか？" } %>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if current_company && @job_offer.m_users.any? %>
     <div class="container mt-4">
-      <h1 class="h4 mb-0"><%= @job_offer.m_users.count %> 人のユーザーが提案を提出しました。</h1>
-
       <div class="border rounded shadow-sm bg-light">
         <h1 class="h4 bg-dark text-white py-2 px-3 rounded-top">応募ユーザー</h1>
-
         <% @job_offer.m_users.each do |user| %>
           <div class="row align-items-center px-3 py-2 border-bottom">
             <div class="col-2 text-center">
@@ -56,7 +73,7 @@
             </div>
             <div class="col-10">
               <h2 class="h5 text-dark mb-1"><%= user.name %></h2>
-              <span class="badge bg-success fs-6 py-2 px-3 rounded-pill"><%= user.category.title %></span>
+              <span class="badge bg-success fs-6 py-2 px-3 rounded-pill">Software Engineer</span>
             </div>
           </div>
         <% end %>

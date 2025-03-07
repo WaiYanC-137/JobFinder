@@ -5,5 +5,10 @@ class TJobOffer < ApplicationRecord
     belongs_to :company, class_name: 'MCompany', foreign_key: 'company_id'
     belongs_to :location, class_name: 'TLocation', foreign_key: 'location_id'
     belongs_to :category, class_name: 'TCategory', foreign_key: 'category_id'
+
+    validates :title, presence: true, length: { maximum: 100 }
+    validates :description, presence: true, length: { minimum: 20 }
+    validates :category, presence: true
+    validates :location, presence: true
   
 end

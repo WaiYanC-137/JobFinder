@@ -9,32 +9,32 @@
 
     <div class="d-flex gap-3">
       <div class="mb-3 w-50">
-        <%= f.label :minsalary, "Minimum Salary" %>
+        <%= f.label :minsalary, "最小給料" %>
         <%= f.number_field :minsalary, step: 0.01, class: "form-control", required: true %>
       </div>
 
       <div class="mb-3 w-50">
-        <%= f.label :maxsalary, "Maximum Salary" %>
+        <%= f.label :maxsalary, "最大給料" %>
         <%= f.number_field :maxsalary, step: 0.01, class: "form-control", required: true %>
       </div>
     </div>
 
     <div class="mb-3">
-      <%= f.label :location_id, "Location" %>
-      <%= f.select :location_id, options_for_select(@locations), { prompt: "Select a location" }, class: "form-select", required: true %>
+      <%= f.label :location_id, "通勤地" %>
+      <%= f.select :location_id, options_for_select(@locations), { prompt: "通勤地を選択してください" }, class: "form-select", required: true %>
     </div>
 
     <div class="mb-3">
       <%= f.label :category_id, "職種" %>
-      <%= f.select :category_id, options_for_select(@categories), { prompt: "Select a category" }, class: "form-select", required: true %>
+      <%= f.select :category_id, options_for_select(@categories), { prompt: "職種を選択してください" }, class: "form-select", required: true %>
     </div>
 
     <!-- Skill Selection Dropdown -->
     <div class="mb-3">
-      <%= f.label :t_skill_ids, "スキル", class: "form-label" %>
+      <%= f.label :t_skill_ids, "必要なスキル", class: "form-label" %>
       <div class="dropdown">
         <button class="btn border border-dark dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button" id="skillsDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-          選択してください
+          必要なスキルを選択してください
         </button>
         <div class="dropdown-menu p-3 w-100" aria-labelledby="skillsDropdownButton">
           <% @skills.each do |skill| %>
@@ -48,13 +48,13 @@
     </div>
 
     <div class="mb-3">
-      <%= f.label :description, "Job Description" %>
+      <%= f.label :description, "仕事内容" %>
       <%= f.text_area :description, class: "form-control", rows: 2, required: true %>
     </div>
 
     <div class="d-flex justify-content-between align-items-center">
-      <%= f.submit "Create Job Offer", class: "btn btn-primary" %>
-      <%= link_to "Back", t_job_offers_path, class: "btn btn-secondary" %>
+      <%= f.submit "投稿", class: "btn btn-primary" %>
+      <%= link_to "戻る", t_job_offers_path, class: "btn btn-secondary" %>
     </div>
   <% end %>
 </div>
