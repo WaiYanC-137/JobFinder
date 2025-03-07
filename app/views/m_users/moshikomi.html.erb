@@ -1,0 +1,83 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card p-4">
+        <h1 class="display-5">履歴書を添付してください</h1>
+        <p class="lead text-muted">これはクライアントにのみ表示されます</p>
+        <h3 class="text-muted mb-4">
+          ファイルのタイプ： <span id="file-name"></span>
+        </h3>
+
+        <!-- Start of Form -->
+        <%= form_with model: @m_user, url: apply_job_offer_path(job_offer_id: @job_offer.id), local: true, multipart: true do |form| %>
+          <div class="mb-4">
+            <%= form.label :resume, "履歴書を選択してください", class: "form-label fs-5" %>
+
+            <!-- Display current resume if uploaded -->
+            <% if @m_user.resume.attached? %>
+              <div class="mb-2">
+                <span>現在の履歴書: </span>
+                <%= link_to "現在の履歴書を表示", rails_blob_path(@m_user.resume, disposition: "attachment"), class: "text-decoration-none" %>
+              </div>
+              <div class="mb-2 text-muted">
+                <small>現在の履歴書をそのまま使用する場合は、再度アップロードしないでください。</small>
+              </div>
+            <% end %>
+
+            <!-- File input for uploading a new resume (optional) -->
+            <%= form.file_field :resume, class: "form-control", accept: ".pdf" %>
+            <div class="invalid-feedback">
+              履歴書を選択してください。
+            </div>
+          </div>
+
+          <!-- Display file type and size information -->
+          <div id="file-type-info" class="mb-3 text-muted"></div>
+
+          <!-- Submit and Cancel Buttons -->
+          <div class="d-flex justify-content-end mt-3">
+            <%= form.submit "アップロード", class: "btn btn-success rounded" %>
+            <button type="button" class="btn btn-secondary rounded ms-3" id="cancel-btn">キャンセル</button>
+          </div>
+        <% end %>
+        <!-- End of Form -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const fileInput = document.getElementById('resume');
+  const fileNameDisplay = document.getElementById('file-name');
+  const fileTypeInfo = document.getElementById('file-type-info');
+  const cancelBtn = document.getElementById('cancel-btn');
+
+  // Listen for file input changes
+  fileInput.addEventListener('change', function () {
+    const file = fileInput.files[0];
+
+    if (file) {
+      const fileType = file.type; // Get the file's MIME type
+      const fileSize = file.size; // Get file size in bytes
+      const fileName = file.name; // Get the file's name
+
+      // Update the displayed file name and example
+      fileNameDisplay.textContent = `${fileName} (例: ${fileName})`;
+
+      // Show the file type and size in a user-friendly way
+      fileTypeInfo.textContent = `選択されたファイルタイプ: ${fileType} / サイズ: ${(fileSize / 1024).toFixed(2)} KB`;
+    } else {
+      fileTypeInfo.textContent = '';
+      fileNameDisplay.textContent = '';
+    }
+  });
+
+  // Cancel button functionality: reset the file input and file info
+  cancelBtn.addEventListener('click', function () {
+    fileInput.value = '';  // Clear the file input
+    fileNameDisplay.textContent = '';  // Clear the file name display
+    fileTypeInfo.textContent = '';  // Clear the file info
+  });
+});
+</script>

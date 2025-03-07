@@ -106,21 +106,45 @@ class MUsersController < ApplicationController
       render :edit_password, status: :unprocessable_entity
     end
   end
-
-  def apply_job_offer
+  def moshikomi
     @job_offer = TJobOffer.find(params[:job_offer_id])
-    
-    # Check if the current user has already applied to this job offer
-    if current_user.t_job_offers.exists?(@job_offer.id)
-      flash[:alert] = "You have already applied to this job offer."
-    else
-      # Associate the job offer with the user
-      current_user.t_job_offers << @job_offer
-      flash[:notice] = "You have successfully applied to the job offer."
-    end
-
-    redirect_to t_job_offer_path(@job_offer)
+    @m_user=current_user
   end
+  def apply_job_offer
+    @m_user = current_user  # Get the currently logged-in user
+    @job_offer = TJobOffer.find(params[:job_offer_id])  # Find the job offer
+  
+    # First, check if the user already has a resume attached
+    if @m_user.resume.attached?
+      # If resume is attached, proceed to save the user and associate with the job offer
+      if @m_user.save
+        @job_offer.m_users << @m_user
+  
+        redirect_to @job_offer, notice: '履歴書が正常にアップロードされ、応募が完了しました。'
+      else
+        render :apply_job_offer, alert: '履歴書のアップロードに失敗しました。'
+      end
+    # If no resume is attached, check if a new file is being uploaded
+    elsif params[:m_user][:resume].present?
+      # Attach the uploaded resume to the user
+      @m_user.resume.attach(params[:m_user][:resume])
+  
+      # Save the user and associate with the job offer
+      if @m_user.save
+        @job_offer.m_users << @m_user
+  
+        redirect_to @job_offer, notice: '履歴書が正常にアップロードされ、応募が完了しました。'
+      else
+        render :apply_job_offer, alert: '履歴書のアップロードに失敗しました。'
+      end
+    else
+      # If no resume is provided and none is attached, show an error
+      redirect_to @job_offer, alert: '履歴書を選択してください。'
+    end
+  end
+  
+  
+
 
   private
   def password_params

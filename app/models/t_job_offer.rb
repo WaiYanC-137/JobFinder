@@ -1,5 +1,7 @@
 class TJobOffer < ApplicationRecord
 
+
+
     has_and_belongs_to_many :t_skills, join_table: 't_job_offers_skills'
     has_and_belongs_to_many :m_users, join_table: :m_users_t_job_offers
     belongs_to :company, class_name: 'MCompany', foreign_key: 'company_id'

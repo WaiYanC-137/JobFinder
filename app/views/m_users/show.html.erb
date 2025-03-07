@@ -1,44 +1,55 @@
 <div class="container-fluid px-5">
   <div class="row mb-3">
-    
-    <!-- Profile Picture Column -->
+
+    <!-- Profile Picture Section -->
     <div class="col-2">
-        <% if @m_user.profile_picture.attached? %>
-          <%= image_tag @m_user.profile_picture, 
-                class: "rounded-circle", 
-                style: "width: 200px; height: 200px; object-fit: cover;" %>
-        <% else %>
-          <%= image_tag "default_profile.png", 
-                class: "rounded-circle", 
-                style: "width: 200px; height: 200px; object-fit: cover;" %>
-        <% end %>
+      <% if @m_user.profile_picture.attached? %>
+        <%= image_tag @m_user.profile_picture, 
+              class: "rounded-circle", 
+              style: "width: 200px; height: 200px; object-fit: cover;" %>
+      <% else %>
+        <%= image_tag "default_profile.png", 
+              class: "rounded-circle", 
+              style: "width: 200px; height: 200px; object-fit: cover;" %>
+      <% end %>
     </div>
 
-    <!-- User Information Column -->
+    <!-- User Information Section -->
     <div class="col-10">
       <div class="px-5 py-3 d-flex flex-column justify-content-start">
-        
-        <!-- User Name -->
-        <h1 class="text-secondary h5 mb-1 w-25">
-  <%= @m_user.name %>
-  <% if current_user %>
-    <%= link_to edit_m_user_path(current_user || @m_user), class: "ms-3 fs-4 text-decoration-none" do %>
-      <i class="fa-solid fa-pen-to-square text-secondary"></i>
-    <% end %>
-  <% end %>
-</h1>
 
+        <!-- User Name & Edit Button -->
+        <div class="d-flex justify-content-between align-items-center">
+          <h1 class="text-secondary h5 mb-1 w-25">
+            <%= @m_user.name %>
+            <% if current_user %>
+              <%= link_to edit_m_user_path(current_user || @m_user), class: "ms-3 fs-4 text-decoration-none" do %>
+                <i class="fa-solid fa-pen-to-square text-secondary"></i>
+              <% end %>
+            <% end %>
+          </h1>
+          <span>
+            <% if @m_user.resume.attached? %>
+              <span class="fs-5 me-3">履歴書</span>
+              <%= link_to "<i class='fa-solid fa-download fs-4 text-secondary'></i>".html_safe, rails_blob_path(@m_user.resume, disposition: "attachment") %>
+            <% else %>
+              <span>履歴書がアップロードされていません。</span>
+            <% end %>
+          </span>
+        </div>
 
-        <!-- Category & Location -->
+        <!-- Category & Location Section -->
         <div class="w-25 d-flex justify-content-start align-items-center">
-          <span class="h6 px-1 py-2 bg-success rounded mt-2 me-3" style="color:white;"><%= @m_user.category&.title || "No Category" %></span>
+          <span class="h6 px-1 py-2 bg-success rounded mt-2 me-3" style="color:white;">
+            <%= @m_user.category&.title || "No Category" %>
+          </span>
           <a href="#" class="text-decoration-none text-secondary btn border-dark">
             <i class="fa-solid fa-location-dot me-2"></i>
             <%= @m_user.location&.city || "No Location" %>
           </a>
         </div>
 
-        <!-- Skills -->
+        <!-- Skills Section -->
         <div class="mb-2 mt-4">
           <% @m_user.t_skills.each do |skill| %>
             <span class="bg-primary px-3 py-2 rounded me-3 text-white">
@@ -51,42 +62,53 @@
     </div>
 
   </div>
-  <p class="mb-3 mt-2"><%= @m_user.about%></p>
+
+  <!-- About Section -->
+  <p class="mb-3 mt-2"><%= @m_user.about %></p>
+
+  <!-- Contact Information Section -->
   <div class="border border-dark py-2 px-3 mb-3">
     <h1 class="h3 mb-4">コンタクト</h1>
-    <p class="mb-2"><i class="fa-solid fa-phone me-2"></i><%=@m_user.phone%></p>
-    <p><i class="fa-solid fa-envelope me-2"></i><%=@m_user.email%></p>
+    <p class="mb-2">
+      <i class="fa-solid fa-phone me-2"></i><%= @m_user.phone %>
+    </p>
+    <p>
+      <i class="fa-solid fa-envelope me-2"></i><%= @m_user.email %>
+    </p>
   </div>
+
+  <!-- Job Offers Section -->
   <% if current_user && @joboffers.present? %>
-  <div class="border border-dark px-3 mt-2">
-    <h1 class="h3 mb-2">募集概要</h1>
-    
-    <table class="table table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>カテゴリー</th>
-          <th>会社名</th>
-          <th>投稿日</th>
-          <th>詳細</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @joboffers.each do |job_offer| %>
+    <div class="border border-dark px-3 mt-2">
+      <h1 class="h3 mb-2">募集概要</h1>
+
+      <table class="table table-bordered">
+        <thead class="table-dark">
           <tr>
-            <td><%= job_offer.category.title %></td>
-            <td><%= job_offer.company.name %></td>
-            <td><%= job_offer.created_at.strftime("%Y-%m-%d") %></td>
-            <td><%= link_to "詳細", t_job_offer_path(job_offer.id), class: "btn btn-primary btn-sm" %></td>
+            <th>カテゴリー</th>
+            <th>会社名</th>
+            <th>投稿日</th>
+            <th>詳細</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @joboffers.each do |job_offer| %>
+            <tr>
+              <td><%= job_offer.category.title %></td>
+              <td><%= job_offer.company.name %></td>
+              <td><%= job_offer.created_at.strftime("%Y-%m-%d") %></td>
+              <td>
+                <%= link_to "詳細", t_job_offer_path(job_offer.id), class: "btn btn-primary btn-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
 
-    <div class="pagination d-flex justify-content-end mt-1">
-      <%= paginate @joboffers %>
+      <!-- Pagination Section -->
+      <div class="pagination d-flex justify-content-end mt-1">
+        <%= paginate @joboffers %>
+      </div>
     </div>
-  </div>
-<% end %>
-
-
+  <% end %>
 </div>

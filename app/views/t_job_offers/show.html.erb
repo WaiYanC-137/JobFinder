@@ -1,15 +1,11 @@
 <div class="container pb-5 mb-5">
   <div class="container">
     <div class="row">
+      <!-- Job Offer Title & Status -->
       <div class="col-8">
         <h2 class="h3">
           <%= @job_offer.title %>
-          <% if @job_offer.restricted %>
-            <i class="fa-solid fa-bullhorn ms-3 text-warning"></i>
-          <% else %>
-            <i class="fa-solid fa-bullhorn ms-3 text-success"></i>
-          <% end %>
-
+          <i class="fa-solid fa-bullhorn ms-3 <%= @job_offer.restricted ? 'text-warning' : 'text-success' %>"></i>
         </h2>
 
         <p><span class="fs-6">職種 : </span> <%= @job_offer.category.title %></p>
@@ -23,16 +19,27 @@
         </p>
       </div>
 
+      <!-- Job Offer Interaction -->
       <div class="col-4 d-flex flex-column align-items-end justify-content-around h-100">
         <% posted_time = @job_offer.updated_at.presence || @job_offer.created_at %>
         <p class="fs-5">Posted <%= time_ago_in_words(posted_time) %> ago</p>
 
         <% if current_user %>
-          <%= link_to @job_offer.m_users.exists?(id: current_user.id) ? '提出済み' : '提出', 
-                      @job_offer.m_users.exists?(id: current_user.id) ? '#' : apply_job_offer_path(@job_offer.id), 
-                      class: "btn #{ @job_offer.m_users.exists?(id: current_user.id) ? 'btn-secondary disabled' : 'btn-success' } text-white", 
-                      aria: { disabled: @job_offer.m_users.exists?(id: current_user.id) } %>
+          <!-- User Interaction Button -->
+          <% if @job_offer.m_users.exists?(id: current_user.id) || @job_offer.restricted? %>
+            <% button_text = @job_offer.restricted? ? '募集停止中' : '提出済み' %>
+            <% link_path = '#' %>
+            <% button_class = 'btn-secondary disabled' %>
+          <% else %>
+            <% button_text = '提出' %>
+            <% link_path = moshikomi_path(@job_offer.id) %>
+            <% button_class = 'btn-success' %>
+          <% end %>
+
+          <%= link_to button_text, link_path, class: "btn #{button_class} text-white", aria: { disabled: link_path == '#' } %>
+        
         <% elsif current_company && @job_offer.company_id == current_company.id %>
+          <!-- Company Specific Actions -->
           <div class="d-flex gap-2">
             <%= link_to '編集', edit_t_job_offer_path(@job_offer), class: 'btn btn-warning' %>
             <%= button_to '削除', @job_offer, method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
@@ -41,27 +48,31 @@
       </div>
     </div>
 
+    <!-- Job Description -->
     <h5>仕事内容</h5>
     <div class="border border-dark px-3 py-1">
       <%= simple_format(@job_offer.description) %>
     </div>
-    
-    <p class="mt-2">投稿 : <span class="fs-6 text-primary"><%= @job_offer.company.name %></span></p>
+
+<p class="mt-2">投稿 : <span class="fs-6 text-primary">
+<%= link_to @job_offer.company.name, m_company_path(@job_offer.company), class: "text-decoration-none" %>
+</span></p>
   </div>
 
+  <!-- Company Specific View -->
   <% if current_company %>
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="h4 <%= @job_offer.m_users.count.zero? ? 'text-danger' : '' %>">
         <%= @job_offer.m_users.count.zero? ? 'まだユーザーが提案を提出していません。' : "#{@job_offer.m_users.count} 人のユーザーが提案を提出しました。" %>
       </h1>
-      <% if @job_offer.restricted %>
-        <%= button_to "制限", restrict_t_job_offer_path(@job_offer), method: :patch, class: "btn btn-warning px-3", data: { confirm: "この求人の応募を制限しますか？" } %>
-      <% else %>
-        <%= button_to "制限", restrict_t_job_offer_path(@job_offer), method: :patch, class: "btn btn-success px-3", data: { confirm: "この求人の応募を制限しますか？" } %>
-      <% end %>
+
+      <% button_text = @job_offer.restricted? ? '制限解除' : '制限' %>
+      <% button_class = @job_offer.restricted? ? 'btn-success' : 'btn-warning' %>
+      <%= button_to button_text, restrict_t_job_offer_path(@job_offer), method: :patch, class: "btn #{button_class} px-3", data: { confirm: "この求人の応募を#{@job_offer.restricted? ? '解除' : '制限'}しますか？" } %>
     </div>
   <% end %>
 
+  <!-- Applied Users -->
   <% if current_company && @job_offer.m_users.any? %>
     <div class="container mt-4">
       <div class="border rounded shadow-sm bg-light">

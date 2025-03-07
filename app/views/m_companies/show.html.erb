@@ -24,8 +24,10 @@
         <!-- User Name -->
         <h1 class="text-secondary h5 mb-3 w-25">
         <%= @m_company.name %>
-        <%= link_to edit_m_company_path(current_company), class: "ms-3 fs-4 text-decoration-none" do %>
+        <% if current_company %>
+          <%= link_to edit_m_company_path(current_company), class: "ms-3 fs-4 text-decoration-none" do %>
             <i class="fa-solid fa-pen-to-square text-secondary"></i>
+        <% end %>
         <% end %>
         </h1>
 

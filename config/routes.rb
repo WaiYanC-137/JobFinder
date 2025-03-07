@@ -12,7 +12,8 @@ Rails.application.routes.draw do
   resources :m_users
   get 'edit_password_user', to: 'm_users#edit_password'
   patch 'update_password_user', to: 'm_users#update_password'
-  get 'apply_job_offer/:job_offer_id', to: 'm_users#apply_job_offer', as: 'apply_job_offer'
+  get "moshikomi/:job_offer_id", to: "m_users#moshikomi", as:"moshikomi"
+  patch 'apply_job_offer/:job_offer_id', to: 'm_users#apply_job_offer', as: 'apply_job_offer'
 
   resources :t_job_offers do
     member do

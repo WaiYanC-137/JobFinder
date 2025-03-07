@@ -1,5 +1,7 @@
 class MUser < ApplicationRecord
   attr_accessor :remember_token
+  has_one_attached :resume
+
 
   has_one_attached :profile_picture
   belongs_to :location, class_name: 'TLocation', foreign_key: 'location_id', optional: true
