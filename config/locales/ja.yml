@@ -12,6 +12,14 @@ ja:
         email: "メールアドレス"
         password: "パスワード"
         password_confirmation: "確認用パスワード"
+      t_job_offer:
+        title: "求人タイトル"
+        minsalary: "最低給与"
+        maxsalary: "最高給与"
+        location: "勤務地"
+        category: "カテゴリ"
+        t_skills: "必要スキル"
+        description: "仕事内容"
   datetime:
     distance_in_words:
       less_than_x_minutes:

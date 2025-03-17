@@ -15,15 +15,6 @@ ATTRIBUTES = {
   password_confirmation: "確認用パスワード"
 }.freeze
 
-
-ATTRIBUTES = {
-  name: "名前",
-  email: "メールアドレス",
-  phone: "電話番号",
-  password: "パスワード",
-  password_confirmation: "確認用パスワード",
-}.freeze
-
 LABELS = {
   login: "ログイン"
 }

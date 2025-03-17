@@ -1,6 +1,6 @@
 class TJobOffersController < ApplicationController
   before_action :set_job_offer, only: %i[show edit update destroy]
-  before_action :set_form_data, only: %i[new create edit]
+  before_action :set_form_data, only: %i[new create edit update]
 
   def new
     @job_offer = TJobOffer.new(company: current_company)
@@ -21,6 +21,7 @@ class TJobOffersController < ApplicationController
   end
 
   def edit
+           
   end
 
   def update
@@ -68,9 +69,7 @@ class TJobOffersController < ApplicationController
   def set_form_data
     @locations = TLocation.all.pluck(:city, :id)
     @categories = TCategory.all.pluck(:title, :id)
-    @skills = TSkill.all || [] # Ensure @skills is never nil
-    Rails.logger.debug "Loaded skills: #{@skills.inspect}"
-
+    @skills = TSkill.all# Ensure @skills is never nil
   end
 
   def job_offer_params

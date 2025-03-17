@@ -1,32 +1,32 @@
-<div class="container-fluid w-50">
+<div class="container-fluid w-50 mb-5">
   <h1>募集書の作成</h1>
 
   <%= form_with model: @job_offer, local: true do |f| %>
     <div class="mb-3">
       <%= f.label :title, "タイトル" %>
-      <%= f.text_field :title, class: "form-control", required: true %>
+      <%= f.text_field :title, class: "form-control" %>
     </div>
 
     <div class="d-flex gap-3">
       <div class="mb-3 w-50">
         <%= f.label :minsalary, "最小給料" %>
-        <%= f.number_field :minsalary, step: 0.01, class: "form-control", required: true %>
+        <%= f.number_field :minsalary, step: 0.01, class: "form-control" %>
       </div>
 
       <div class="mb-3 w-50">
         <%= f.label :maxsalary, "最大給料" %>
-        <%= f.number_field :maxsalary, step: 0.01, class: "form-control", required: true %>
+        <%= f.number_field :maxsalary, step: 0.01, class: "form-control" %>
       </div>
     </div>
 
     <div class="mb-3">
       <%= f.label :location_id, "通勤地" %>
-      <%= f.select :location_id, options_for_select(@locations), { prompt: "通勤地を選択してください" }, class: "form-select", required: true %>
+      <%= f.select :location_id, options_for_select(@locations), { prompt: "通勤地を選択してください" }, class: "form-select"%>
     </div>
 
     <div class="mb-3">
       <%= f.label :category_id, "職種" %>
-      <%= f.select :category_id, options_for_select(@categories), { prompt: "職種を選択してください" }, class: "form-select", required: true %>
+      <%= f.select :category_id, options_for_select(@categories), { prompt: "職種を選択してください" }, class: "form-select" %>
     </div>
 
     <!-- Skill Selection Dropdown -->
@@ -49,7 +49,7 @@
 
     <div class="mb-3">
       <%= f.label :description, "仕事内容" %>
-      <%= f.text_area :description, class: "form-control", rows: 2, required: true %>
+      <%= f.text_area :description, class: "form-control", rows: 2 %>
     </div>
 
     <div class="d-flex justify-content-between align-items-center">

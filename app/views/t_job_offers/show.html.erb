@@ -21,8 +21,10 @@
 
       <!-- Job Offer Interaction -->
       <div class="col-4 d-flex flex-column align-items-end justify-content-around h-100">
-        <% posted_time = @job_offer.updated_at.presence || @job_offer.created_at %>
-        <p class="fs-5">Posted <%= time_ago_in_words(posted_time) %> ago</p>
+      <% posted_time = @job_offer.updated_at.presence || @job_offer.created_at %>
+<% time_label = @job_offer.updated_at ? "Updated" : "Posted" %>
+
+<p class="fs-5"><%= "#{time_label} #{time_ago_in_words(posted_time)} ago" %></p>
 
         <% if current_user %>
           <!-- User Interaction Button -->
@@ -54,9 +56,9 @@
       <%= simple_format(@job_offer.description) %>
     </div>
 
-<p class="mt-2">投稿 : <span class="fs-6 text-primary">
-<%= link_to @job_offer.company.name, m_company_path(@job_offer.company), class: "text-decoration-none" %>
-</span></p>
+    <p class="mt-2">投稿 : <span class="fs-6 text-primary">
+      <%= link_to @job_offer.company.name, m_company_path(@job_offer.company), class: "text-decoration-none" %>
+    </span></p>
   </div>
 
   <!-- Company Specific View -->

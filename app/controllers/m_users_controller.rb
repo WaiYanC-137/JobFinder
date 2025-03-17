@@ -42,8 +42,7 @@ class MUsersController < ApplicationController
     @categories = TCategory.all 
     @skills = TSkill.all       
     @locations = TLocation.all
-    puts @m_user.inspect
-    puts "edit cagteogry #{@categories.inspect}"
+    
   end
 
   def update
