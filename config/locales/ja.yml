@@ -20,6 +20,9 @@ ja:
         category: "カテゴリ"
         t_skills: "必要スキル"
         description: "仕事内容"
+    errors:
+      messages:
+        record_invalid: "無効なレコードです"
   datetime:
     distance_in_words:
       less_than_x_minutes:
